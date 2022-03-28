@@ -5,7 +5,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from tqdm import tqdm
 
-from msg.simulate import simulate_base_model
+from mgs.simulate import simulate_base_model
 
 start_time = time.time()
 

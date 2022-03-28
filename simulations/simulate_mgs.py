@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-from msg.simulate import simulate_base_model
+from mgs.simulate import simulate_base_model
 
 percent_of_contributors = simulate_base_model(
     length=21,
