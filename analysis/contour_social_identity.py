@@ -1,10 +1,16 @@
+import os
 import sys
+import inspect
 import time
 
 import numpy as np
 from matplotlib import pyplot as plt
 from tqdm import tqdm
-
+# include the parent directory to the system path
+current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parent_dir = os.path.dirname(current_dir)
+sys.path.insert(0, parent_dir)
+# include the package
 from social_identity.simulate import simulate_social_identity_model
 
 start_time = time.time()
