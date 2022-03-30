@@ -3,16 +3,23 @@ import random
 from lattice.torus import TorusLattice
 
 
-def potentially_moving(field: TorusLattice, effort: int, synergy: int, pressure: int):
+def potentially_moving(field: TorusLattice, effort: int, synergy: float, pressure: float):
     agents_list = field.nonempty()
     for agent in agents_list:
         row, col = agent
-        if field[row, col] + synergy * effort * field.nonempty_number_in_radius(row, col, radius=1, value=effort) / \
-                field.nonempty_number_in_radius(row, col, radius=1) <= pressure:
-            field.move_from(row, col)
+        if field[row, col] == effort:
+            # contributors that are going to leave the group
+            if synergy * effort * field.nonempty_number_in_radius(row, col, radius=1, value=effort) / \
+                    field.nonempty_number_in_radius(row, col, radius=1) <= pressure:
+                field.move_from(row, col)
+        else:
+            # non-contributors that are going to leave the group
+            if effort + synergy * effort * field.nonempty_number_in_radius(row, col, radius=1, value=effort) / \
+                    field.nonempty_number_in_radius(row, col, radius=1) <= pressure:
+                field.move_from(row, col)
 
 
-def potentially_changing_behavior(field: TorusLattice, effort: int, synergy: int, pressure: int):
+def potentially_changing_behavior(field: TorusLattice, effort: int, synergy: float, pressure: float):
     agents_list = field.nonempty()
     for agent in agents_list:
         row, col = agent
@@ -23,11 +30,15 @@ def potentially_changing_behavior(field: TorusLattice, effort: int, synergy: int
                 else:
                     field[row, col] = effort
         else:
-            if field[row, col] + synergy * effort * field.nonempty_number_in_radius(row, col, radius=1, value=effort) / \
-                    field.nonempty_number_in_radius(row, col, radius=1) <= pressure:
-                if field[row, col] == effort:
+            if field[row, col] == effort:
+                # Vulnerable contributors that are in a group reconsider
+                if synergy * effort * field.nonempty_number_in_radius(row, col, radius=1, value=effort) / \
+                        field.nonempty_number_in_radius(row, col, radius=1) <= pressure:
                     field[row, col] = 0
-                else:
+            else:
+                # Vulnerable non-contributors that are in a group reconsider
+                if effort + synergy * effort * field.nonempty_number_in_radius(row, col, radius=1, value=effort) / \
+                        field.nonempty_number_in_radius(row, col, radius=1) <= pressure:
                     field[row, col] = effort
 
 
@@ -64,6 +75,3 @@ def simulate_base_model(
             field.plot(f"The Social Space # {tick}")
         tick += 1
     return percent_of_contributors
-
-
-

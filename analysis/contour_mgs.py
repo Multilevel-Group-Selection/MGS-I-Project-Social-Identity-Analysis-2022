@@ -16,7 +16,7 @@ from mgs.simulate import simulate_base_model
 start_time = time.time()
 
 # -------
-Ngrid = 20
+Ngrid = 10
 syn = np.linspace(0, 10, Ngrid)  # grid nodes for synergy
 pre = np.linspace(0, 10, Ngrid)  # grid nodes for pressure
 

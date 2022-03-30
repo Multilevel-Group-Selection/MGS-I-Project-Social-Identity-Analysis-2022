@@ -42,8 +42,10 @@ def simulate_social_identity_model(
             neighbors_number = agents_in_radius - 1
             focal_agent_benefit = synergy * effort * field.nonempty_number_in_radius(row, col, radius=1,
                                                                                      value=effort) / agents_in_radius
-            focal_agent_effort_and_benefit = field[row, col] + focal_agent_benefit
-            is_focal_agent_threat_to_self = (focal_agent_effort_and_benefit <= pressure)
+            is_focal_agent_threat_to_self = (
+                    field[row, col] == effort and focal_agent_benefit <= pressure or
+                    field[row, col] == 0 and effort + focal_agent_benefit <= pressure
+            )
             if neighbors_number <= 1:
                 # If the agent’s number of neighbors is ≤ 1, follow the base model’s existing logic for movement and type change.
                 if is_focal_agent_threat_to_self:
@@ -67,12 +69,12 @@ def simulate_social_identity_model(
                     retained_efforts_and_benefits.append(effort_and_benefit)
                     benefit_from_group.append(benefit)
                     threat_to_self_values.append(
-                        effort_and_benefit <= pressure
+                        field[group_agent_row, group_agent_col] == effort and benefit <= pressure or
+                        field[group_agent_row, group_agent_col] == 0 and effort + benefit <= pressure
                     )
                 # Calculate the group’s average retained effort and benefit-from-group
                 retained_efforts_and_benefits_average = sum(retained_efforts_and_benefits) / len(
                     retained_efforts_and_benefits)
-                benefit_from_group_average = sum(benefit_from_group) / len(benefit_from_group)
                 threat_to_group = (retained_efforts_and_benefits_average <= pressure)
                 members_need_help = any(threat_to_self_values) and (field[row, col] == 0)  # True if at least one group's memeber "retained effort and benefit" below the pressure level
                 if use_strong_commitment:
@@ -144,16 +146,21 @@ def simulate_social_identity_model(
                     if effort <= pressure:
                         if field[row, col] == effort:
                             field[row, col] = 0
-                            to_contrib += 1
+                            to_noncontrib += 1
                         else:
                             field[row, col] = effort
                             to_contrib += 1
                 else:
-                    if field[row, col] + synergy * effort * field.nonempty_number_in_radius(row, col, radius=1, value=effort) / field.nonempty_number_in_radius(row, col, radius=1) <= pressure:
-                        if field[row, col] == effort:
+                    if field[row, col] == effort:
+                        # Vulnerable contributors that are in a group reconsider
+                        if synergy * effort * field.nonempty_number_in_radius(row, col, radius=1, value=effort) / \
+                                field.nonempty_number_in_radius(row, col, radius=1) <= pressure:
                             field[row, col] = 0
-                            to_contrib += 1
-                        else:
+                            to_noncontrib += 1
+                    else:
+                        # Vulnerable non-contributors that are in a group reconsider
+                        if effort + synergy * effort * field.nonempty_number_in_radius(row, col, radius=1, value=effort) / \
+                                field.nonempty_number_in_radius(row, col, radius=1) <= pressure:
                             field[row, col] = effort
                             to_contrib += 1
             else:
