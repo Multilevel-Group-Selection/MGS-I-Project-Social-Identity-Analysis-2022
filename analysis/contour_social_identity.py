@@ -5,6 +5,7 @@ import time
 
 import numpy as np
 from matplotlib import pyplot as plt
+from scipy.ndimage import gaussian_filter
 from tqdm import tqdm
 # include the parent directory to the system path
 current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -13,10 +14,14 @@ sys.path.insert(0, parent_dir)
 # include the package
 from social_identity.simulate import simulate_social_identity_model
 
-start_time = time.time()
-
-# -------
-Ngrid = 10
+# parameters of the simulation
+length = 21  # length of the social space
+density = 0.3  # density of spots randomly occupied by agents
+initial_percent = 0.3  # initial percent of contributing agents
+use_strong_commitment = False  # if True then the model applies the strong commitment else the model applies the weak commitment
+tick_max = 200  # the maximum number of attempts at one simulation
+Ngrid = 21  # number of points in ranges for synergy and pressure
+# create ranges for the simulation
 syn = np.linspace(0, 10, Ngrid)  # grid nodes for synergy
 pre = np.linspace(0, 10, Ngrid)  # grid nodes for pressure
 
@@ -26,6 +31,7 @@ N_runs = 3  # Number of runs of the same setup for averaging
 
 PE_MSI = np.zeros((N_points, N_points))
 
+start_time = time.time()
 # loops over pressure and synergy
 for ip in range(N_points):
     for ie in tqdm(range(N_points), file=sys.stdout):
@@ -33,14 +39,14 @@ for ip in range(N_points):
 
         for i in range(N_runs):  # loop over number of runs for the same setup
             per_cont_model1 = simulate_social_identity_model(
-                length=21,
-                density=0.3,
-                initial_percent=0.3,
+                length=length,
+                density=density,
+                initial_percent=initial_percent,
                 effort=1,
                 pressure=pre[ip],
                 synergy=syn[ie],
-                use_strong_commitment=False,  # If True then the strong commitment is applied else the weak commitment is applied
-                tick_max=200,
+                use_strong_commitment=use_strong_commitment,  # If True then the strong commitment is applied else the weak commitment is applied
+                tick_max=tick_max,
                 show_plot_every=0
             )
 
@@ -54,16 +60,22 @@ for ip in range(N_points):
 
 print('Averaged for the Social Identity Model')
 print(PE_MSI)
+print('time of simulations')
+print(time.time() - start_time)
 
 fig, ax = plt.subplots(1, 1)
-cp = ax.contourf(syn, pre, PE_MSI)
+cp = ax.contourf(syn, pre, PE_MSI, levels=np.linspace(0, 100, 11))
 fig.colorbar(cp)  # Add a color bar to a plot
-ax.set_title('Averaged for the Social Identity Model')
+ax.set_title(f'Averaged for the Social Identity Model ({"strong" if use_strong_commitment else "weak"})')
 ax.set_xlabel('synergy')
 ax.set_ylabel('pressure')
 plt.show()
 
-print('time of simulations')
-print(time.time() - start_time)
-
+fig, ax = plt.subplots(1, 1)
+cp = ax.contourf(syn, pre, gaussian_filter(PE_MSI, 0.5), levels=np.linspace(0, 100, 11))
+fig.colorbar(cp)  # Add a color bar to a plot
+ax.set_title(f'Averaged for the Social Identity Model ({"strong" if use_strong_commitment else "weak"}) - filtered')
+ax.set_xlabel('synergy')
+ax.set_ylabel('pressure')
+plt.show()
 
