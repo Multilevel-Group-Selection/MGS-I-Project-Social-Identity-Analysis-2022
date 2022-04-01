@@ -5,6 +5,69 @@ import numpy as np
 from typing import Optional
 
 
+def plot_matrix_values(
+        matrix: np.ndarray,
+        title: str,
+        cmap="viridis",
+        xlabel="",
+        ylabel=""
+):
+    """
+    This function plots the matrix printing values in cells
+    :param matrix: numpy ndarray to be plotted
+    :param title: title of the plot
+    :param cmap: name of or reference to the colormap
+    """
+    fig, ax = plt.subplots()
+    rows, cols = matrix.shape
+    ax.matshow(matrix, cmap=cmap, origin='lower')
+    for i in range(rows):
+        for j in range(cols):
+            ax.text(i, j, str(matrix[j, i]), va='center', ha='center')
+    if xlabel:
+        ax.set_xlabel(xlabel)
+    if ylabel:
+        ax.set_ylabel(ylabel)
+    plt.title(title)
+    plt.show()
+
+
+def plot_matrix_colorbar(
+        matrix: np.ndarray,
+        title: str,
+        cmap="viridis",
+        edgecolors='k',
+        linewidths=1,
+        mark_values=True,
+        xlabel="",
+        ylabel=""
+):
+    """
+    This function plots the matrix using the color bar to denote colors of cells
+    :param matrix: numpy ndarray to be plotted
+    :param title: title of the plot
+    :param cmap: name of or reference to the colormap
+    :param linewidths: width of cell's edges
+    :param edgecolors: color of cell's edges
+    """
+    unique = np.unique(matrix)
+    plt.pcolor(
+        matrix,
+        cmap=plt.get_cmap(cmap, len(unique)) if mark_values else cmap,
+        edgecolors=edgecolors,
+        linewidths=linewidths
+    )
+    cbar = plt.colorbar()
+    if mark_values:
+        cbar.set_ticks(unique)
+    plt.title(title)
+    if xlabel:
+        plt.xlabel(xlabel)
+    if ylabel:
+        plt.ylabel(ylabel)
+    plt.show()
+
+
 class TorusLattice:
     """
     This class is an abstraction of the torus lattice to model the social space
@@ -30,26 +93,19 @@ class TorusLattice:
         c = key[1] % self.order
         self.field[r, c] = value
 
-    def plot(self, title, color_map='viridis', edgecolors='k', linewidths=1):
+    def plot(self, title: str, print_values_in_cells: bool = True):
         """
         Plots the lattice
 
         :param title: The title of the plot
-        :param color_map: Name of the colormap from matplotlib
+        :param print_values_in_cells: if True then the field is plotted printing values in cells
         :param edgecolors: Name of edge color
         :param linewidths: Width of spots borders
         """
-        unique = np.unique(self.field)
-        plt.pcolor(
-            self.field,
-            cmap=plt.get_cmap(color_map, len(unique)),
-            edgecolors=edgecolors,
-            linewidths=linewidths
-        )
-        cbar = plt.colorbar()
-        cbar.set_ticks(unique)
-        plt.title(title)
-        plt.show()
+        if print_values_in_cells:
+            plot_matrix_values(np.array(self.field), title)
+        else:
+            plot_matrix_colorbar(np.array(self.field), title)
 
     def nonempty_number(self):
         """

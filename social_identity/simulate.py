@@ -10,8 +10,8 @@ def simulate_social_identity_model(
         density: float,
         initial_percent: float,
         effort: int,
-        pressure: int,
-        synergy: int,
+        pressure: float,
+        synergy: float,
         use_strong_commitment: bool = True,
         tick_max: int = 200,
         show_plot_every: int = 0
@@ -31,10 +31,18 @@ def simulate_social_identity_model(
     contributors_number = len(field.nonempty(value=effort))
     percent_of_contributors = [contributors_number / population]
     tick = 0
+    not_focal_agent_threat_to_self_not_threat_group_freq = []
+    focal_agent_threat_to_self_not_threat_group_freq = []
+    not_focal_agent_threat_to_self_threat_group_freq = []
+    focal_agent_threat_to_self_threat_group_freq = []
     while 0 < contributors_number < population and tick < tick_max:
         agents_list = field.nonempty()
         contributor = np.zeros((length, length))
         non_contributor = np.zeros((length, length))
+        not_focal_agent_threat_to_self_not_threat_group = 0
+        focal_agent_threat_to_self_not_threat_group = 0
+        not_focal_agent_threat_to_self_threat_group = 0
+        focal_agent_threat_to_self_threat_group = 0
         for agent in agents_list:
             row, col = agent
             group = field.nonempty_in_radius(row, col, radius=1)
@@ -73,10 +81,17 @@ def simulate_social_identity_model(
                         field[group_agent_row, group_agent_col] == 0 and effort + benefit <= pressure
                     )
                 # Calculate the group’s average retained effort and benefit-from-group
-                retained_efforts_and_benefits_average = sum(retained_efforts_and_benefits) / len(
-                    retained_efforts_and_benefits)
+                retained_efforts_and_benefits_average = sum(retained_efforts_and_benefits) / len(retained_efforts_and_benefits)
                 threat_to_group = (retained_efforts_and_benefits_average <= pressure)
                 members_need_help = any(threat_to_self_values) and (field[row, col] == 0)  # True if at least one group's memeber "retained effort and benefit" below the pressure level
+                if not is_focal_agent_threat_to_self and not threat_to_group:
+                    not_focal_agent_threat_to_self_not_threat_group += 1
+                elif is_focal_agent_threat_to_self and not threat_to_group:
+                    focal_agent_threat_to_self_not_threat_group += 1
+                elif not is_focal_agent_threat_to_self and threat_to_group:
+                    not_focal_agent_threat_to_self_threat_group += 1
+                else:
+                    focal_agent_threat_to_self_threat_group += 1
                 if use_strong_commitment:
                     # strong conditions
                     # change behavior
@@ -174,7 +189,11 @@ def simulate_social_identity_model(
         # calc the percentage of contributing agents
         contributors_number = len(field.nonempty(value=effort))
         percent_of_contributors.append(100 * contributors_number / population)
+        not_focal_agent_threat_to_self_not_threat_group_freq.append(not_focal_agent_threat_to_self_not_threat_group)
+        focal_agent_threat_to_self_not_threat_group_freq.append(focal_agent_threat_to_self_not_threat_group)
+        not_focal_agent_threat_to_self_threat_group_freq.append(not_focal_agent_threat_to_self_threat_group)
+        focal_agent_threat_to_self_threat_group_freq.append(focal_agent_threat_to_self_threat_group)
         if show_plot_every > 0 and tick % show_plot_every == 0:
             field.plot(f"The Social Space # {tick}")
         tick += 1
-    return percent_of_contributors
+    return percent_of_contributors, not_focal_agent_threat_to_self_not_threat_group_freq, focal_agent_threat_to_self_not_threat_group_freq, not_focal_agent_threat_to_self_threat_group_freq, focal_agent_threat_to_self_threat_group_freq
