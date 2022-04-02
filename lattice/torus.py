@@ -28,7 +28,8 @@ def plot_matrix_values(
         ax.set_xlabel(xlabel)
     if ylabel:
         ax.set_ylabel(ylabel)
-    plt.title(title)
+    if title:
+        plt.title(title, loc='center', wrap=True, fontsize=8)
     plt.show()
 
 
@@ -60,7 +61,8 @@ def plot_matrix_colorbar(
     cbar = plt.colorbar()
     if mark_values:
         cbar.set_ticks(unique)
-    plt.title(title)
+    if title:
+        plt.title(title, loc='center', wrap=True, fontsize=8)
     if xlabel:
         plt.xlabel(xlabel)
     if ylabel:

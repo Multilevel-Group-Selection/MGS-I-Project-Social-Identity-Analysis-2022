@@ -39,10 +39,10 @@ def simulate_social_identity_model(
         agents_list = field.nonempty()
         contributor = np.zeros((length, length))
         non_contributor = np.zeros((length, length))
-        not_focal_agent_threat_to_self_not_threat_group = 0
-        focal_agent_threat_to_self_not_threat_group = 0
-        not_focal_agent_threat_to_self_threat_group = 0
-        focal_agent_threat_to_self_threat_group = 0
+        not_focal_agent_threat_to_self_not_threat_group = {0: 0, effort: 0}
+        focal_agent_threat_to_self_not_threat_group = {0: 0, effort: 0}
+        not_focal_agent_threat_to_self_threat_group = {0: 0, effort: 0}
+        focal_agent_threat_to_self_threat_group = {0: 0, effort: 0}
         for agent in agents_list:
             row, col = agent
             group = field.nonempty_in_radius(row, col, radius=1)
@@ -85,13 +85,13 @@ def simulate_social_identity_model(
                 threat_to_group = (retained_efforts_and_benefits_average <= pressure)
                 members_need_help = any(threat_to_self_values) and (field[row, col] == 0)  # True if at least one group's memeber "retained effort and benefit" below the pressure level
                 if not is_focal_agent_threat_to_self and not threat_to_group:
-                    not_focal_agent_threat_to_self_not_threat_group += 1
+                    not_focal_agent_threat_to_self_not_threat_group[field[row, col]] += 1
                 elif is_focal_agent_threat_to_self and not threat_to_group:
-                    focal_agent_threat_to_self_not_threat_group += 1
+                    focal_agent_threat_to_self_not_threat_group[field[row, col]] += 1
                 elif not is_focal_agent_threat_to_self and threat_to_group:
-                    not_focal_agent_threat_to_self_threat_group += 1
+                    not_focal_agent_threat_to_self_threat_group[field[row, col]] += 1
                 else:
-                    focal_agent_threat_to_self_threat_group += 1
+                    focal_agent_threat_to_self_threat_group[field[row, col]] += 1
                 if use_strong_commitment:
                     # strong conditions
                     # change behavior

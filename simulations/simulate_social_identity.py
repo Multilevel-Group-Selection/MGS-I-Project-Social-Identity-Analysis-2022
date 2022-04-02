@@ -38,27 +38,58 @@ plt.ylabel("percent")
 plt.show()
 
 
-not_focal_agent_threat_to_self_not_threat_group_freq = np.array(not_focal_agent_threat_to_self_not_threat_group_freq)
-focal_agent_threat_to_self_not_threat_group_freq = np.array(focal_agent_threat_to_self_not_threat_group_freq)
-not_focal_agent_threat_to_self_threat_group_freq = np.array(not_focal_agent_threat_to_self_threat_group_freq)
-focal_agent_threat_to_self_threat_group_freq = np.array(focal_agent_threat_to_self_threat_group_freq)
-total_changes = not_focal_agent_threat_to_self_not_threat_group_freq + focal_agent_threat_to_self_not_threat_group_freq + not_focal_agent_threat_to_self_threat_group_freq + focal_agent_threat_to_self_threat_group_freq
+# not_focal_agent_threat_to_self_not_threat_group_freq = np.array(not_focal_agent_threat_to_self_not_threat_group_freq)
+# focal_agent_threat_to_self_not_threat_group_freq = np.array(focal_agent_threat_to_self_not_threat_group_freq)
+# not_focal_agent_threat_to_self_threat_group_freq = np.array(not_focal_agent_threat_to_self_threat_group_freq)
+# focal_agent_threat_to_self_threat_group_freq = np.array(focal_agent_threat_to_self_threat_group_freq)
+# total_changes = not_focal_agent_threat_to_self_not_threat_group_freq + focal_agent_threat_to_self_not_threat_group_freq + not_focal_agent_threat_to_self_threat_group_freq + focal_agent_threat_to_self_threat_group_freq
 
-plt.plot(not_focal_agent_threat_to_self_not_threat_group_freq, label="No threat to self or group")
-plt.plot(focal_agent_threat_to_self_not_threat_group_freq, label="Threat to self but not group")
-plt.plot(not_focal_agent_threat_to_self_threat_group_freq, label="Threat to group but not self")
-plt.plot(focal_agent_threat_to_self_threat_group_freq, label="Threat to self and group")
+series = [
+    not_focal_agent_threat_to_self_not_threat_group_freq,
+    focal_agent_threat_to_self_not_threat_group_freq,
+    not_focal_agent_threat_to_self_threat_group_freq,
+    focal_agent_threat_to_self_threat_group_freq
+]
+titles = [
+    "No threat to self or group",
+    "Threat to self but not group",
+    "Threat to group but not self",
+    "Threat to self and group"
+]
+for s, t in zip(series, titles):
+    plt.plot(
+        [a[0] for a in s],
+        label=f"{t}: non-contributors"
+    )
+    plt.plot(
+        [a[effort] for a in s],
+        label=f"{t}: contributors"
+    )
 plt.title(f"Situation-Behavior Combinations:\n{info}")
 plt.xlabel("tick")
 plt.ylabel("number of cases")
 plt.legend()
 plt.show()
 
+contrib_total = 0
+non_contrib_total = 0
 
-plt.plot(100 * not_focal_agent_threat_to_self_not_threat_group_freq / total_changes, label="No threat to self or group")
-plt.plot(100 * focal_agent_threat_to_self_not_threat_group_freq / total_changes, label="Threat to self but not group")
-plt.plot(100 * not_focal_agent_threat_to_self_threat_group_freq / total_changes, label="Threat to group but not self")
-plt.plot(100 * focal_agent_threat_to_self_threat_group_freq / total_changes, label="Threat to self and group")
+for s in series:
+    for a in s:
+        non_contrib_total += a[0]
+        contrib_total += a[effort]
+
+for s, t in zip(series, titles):
+    non_contrib = np.array([a[0] for a in s])
+    contrib = np.array([a[effort] for a in s])
+    plt.plot(
+        100 * non_contrib / non_contrib_total,
+        label=f"{t}: non-contributors"
+    )
+    plt.plot(
+        100 * contrib / contrib_total,
+        label=f"{t}: contributors"
+    )
 plt.title(f"Situation-Behavior Combinations:\n{info}")
 plt.xlabel("tick")
 plt.ylabel("percent")
