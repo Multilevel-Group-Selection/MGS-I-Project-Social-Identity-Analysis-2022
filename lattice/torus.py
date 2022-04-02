@@ -10,7 +10,9 @@ def plot_matrix_values(
         title: str,
         cmap="viridis",
         xlabel="",
-        ylabel=""
+        ylabel="",
+        xticks=None,
+        yticks=None
 ):
     """
     This function plots the matrix printing values in cells
@@ -30,6 +32,12 @@ def plot_matrix_values(
         ax.set_ylabel(ylabel)
     if title:
         plt.title(title, loc='center', wrap=True, fontsize=8)
+    if xticks is not None:
+        ax.set_xticks(np.arange(0, len(xticks), 1))
+        ax.set_xticklabels(xticks)
+    if yticks is not None:
+        ax.set_yticks(np.arange(0, len(yticks), 1))
+        ax.set_yticklabels(yticks)
     plt.show()
 
 
@@ -41,7 +49,9 @@ def plot_matrix_colorbar(
         linewidths=1,
         mark_values=True,
         xlabel="",
-        ylabel=""
+        ylabel="",
+        x=None,
+        y=None
 ):
     """
     This function plots the matrix using the color bar to denote colors of cells
@@ -52,12 +62,22 @@ def plot_matrix_colorbar(
     :param edgecolors: color of cell's edges
     """
     unique = np.unique(matrix)
-    plt.pcolor(
-        matrix,
-        cmap=plt.get_cmap(cmap, len(unique)) if mark_values else cmap,
-        edgecolors=edgecolors,
-        linewidths=linewidths
-    )
+    if x is not None and y is not None:
+        plt.pcolor(
+            x,
+            y,
+            matrix,
+            cmap=plt.get_cmap(cmap, len(unique)) if mark_values else cmap,
+            edgecolors=edgecolors,
+            linewidths=linewidths
+        )
+    else:
+        plt.pcolor(
+            matrix,
+            cmap=plt.get_cmap(cmap, len(unique)) if mark_values else cmap,
+            edgecolors=edgecolors,
+            linewidths=linewidths
+        )
     cbar = plt.colorbar()
     if mark_values:
         cbar.set_ticks(unique)

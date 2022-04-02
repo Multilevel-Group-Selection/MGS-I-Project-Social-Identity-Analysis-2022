@@ -156,34 +156,44 @@ plot_matrix_colorbar(
     title=f"No threat to self or group: {info}",
     mark_values=False,
     xlabel="synergy",
-    ylabel="pressure"
+    ylabel="pressure",
+    x=syn,
+    y=pre
 )
 plot_matrix_colorbar(
     np.array(f1_space),
     title=f"Threat to self but not group: {info}",
     mark_values=False,
     xlabel="synergy",
-    ylabel="pressure"
+    ylabel="pressure",
+    x=syn,
+    y=pre
 )
 plot_matrix_colorbar(
     np.array(f2_space),
     title=f"Threat to group but not self: {info}",
     mark_values=False,
     xlabel="synergy",
-    ylabel="pressure"
+    ylabel="pressure",
+    x=syn,
+    y=pre
 )
 plot_matrix_colorbar(
     np.array(f3_space),
     title=f"Threat to self and group: {info}",
     mark_values=False,
     xlabel="synergy",
-    ylabel="pressure"
+    ylabel="pressure",
+    x=syn,
+    y=pre
 )
 plot_matrix_values(
     condition_space,
     title=f"Situation-Behavior Combinations: {info}",
     xlabel="synergy",
-    ylabel="pressure"
+    ylabel="pressure",
+    xticks=syn,
+    yticks=pre
 )
 
 plot_matrix_colorbar(
@@ -191,34 +201,44 @@ plot_matrix_colorbar(
     title=f"Non-contributors. No threat to self or group: {info}",
     mark_values=False,
     xlabel="synergy",
-    ylabel="pressure"
+    ylabel="pressure",
+    x=syn,
+    y=pre
 )
 plot_matrix_colorbar(
     np.array(f1_noncontrib_space),
     title=f"Non-contributors. Threat to self but not group: {info}",
     mark_values=False,
     xlabel="synergy",
-    ylabel="pressure"
+    ylabel="pressure",
+    x=syn,
+    y=pre
 )
 plot_matrix_colorbar(
     np.array(f2_noncontrib_space),
     title=f"Non-contributors. Threat to group but not self: {info}",
     mark_values=False,
     xlabel="synergy",
-    ylabel="pressure"
+    ylabel="pressure",
+    x=syn,
+    y=pre
 )
 plot_matrix_colorbar(
     np.array(f3_noncontrib_space),
     title=f"Threat to self and group: {info}",
     mark_values=False,
     xlabel="synergy",
-    ylabel="pressure"
+    ylabel="pressure",
+    x=syn,
+    y=pre
 )
 plot_matrix_values(
     noncontrib_condition_space,
     title=f"Non-contributors. Situation-Behavior Combinations: {info}",
     xlabel="synergy",
-    ylabel="pressure"
+    ylabel="pressure",
+    xticks=syn,
+    yticks=pre
 )
 
 plot_matrix_colorbar(
@@ -226,32 +246,42 @@ plot_matrix_colorbar(
     title=f"Contributors. No threat to self or group: {info}",
     mark_values=False,
     xlabel="synergy",
-    ylabel="pressure"
+    ylabel="pressure",
+    x=syn,
+    y=pre
 )
 plot_matrix_colorbar(
     np.array(f1_contrib_space),
     title=f"Contributors. Threat to self but not group: {info}",
     mark_values=False,
     xlabel="synergy",
-    ylabel="pressure"
+    ylabel="pressure",
+    x=syn,
+    y=pre
 )
 plot_matrix_colorbar(
     np.array(f2_contrib_space),
     title=f"Contributors. Threat to group but not self: {info}",
     mark_values=False,
     xlabel="synergy",
-    ylabel="pressure"
+    ylabel="pressure",
+    x=syn,
+    y=pre
 )
 plot_matrix_colorbar(
     np.array(f3_contrib_space),
     title=f"Contributors. Threat to self and group: {info}",
     mark_values=False,
     xlabel="synergy",
-    ylabel="pressure"
+    ylabel="pressure",
+    x=syn,
+    y=pre
 )
 plot_matrix_values(
     contrib_condition_space,
     title=f"Contributors. Situation-Behavior Combinations: {info}",
     xlabel="synergy",
-    ylabel="pressure"
+    ylabel="pressure",
+    xticks=syn,
+    yticks=pre
 )
