@@ -22,7 +22,7 @@ density = 0.3  # density of spots randomly occupied by agents
 initial_percent = 0.3  # initial percent of contributing agents
 use_strong_commitment = False  # if True then the model applies the strong commitment else the model applies the weak commitment
 tick_max = 200  # the maximum number of attempts at one simulation
-Ngrid = 5  # number of points in ranges for synergy and pressure
+Ngrid = 11  # number of points in ranges for synergy and pressure
 # create ranges for the simulation
 syn = np.linspace(0, 10, Ngrid)  # grid nodes for synergy
 pre = np.linspace(0, 10, Ngrid)  # grid nodes for pressure
@@ -96,20 +96,39 @@ for ip in range(N_points):
             )
         # mean values for the same setup
         PE_MSI[ip, ie] = np.mean(fin_MSI)
-        f0_space[ip, ie] = np.mean([f[0] + f[1] for f in f0_total])
-        f1_space[ip, ie] = np.mean([f[0] + f[1] for f in f1_total])
-        f2_space[ip, ie] = np.mean([f[0] + f[1] for f in f2_total])
-        f3_space[ip, ie] = np.mean([f[0] + f[1] for f in f3_total])
-        f0_noncontrib_space[ip, ie] = np.mean([f[0] for f in f0_total])
-        f1_noncontrib_space[ip, ie] = np.mean([f[0] for f in f1_total])
-        f2_noncontrib_space[ip, ie] = np.mean([f[0] for f in f2_total])
-        f3_noncontrib_space[ip, ie] = np.mean([f[0] for f in f3_total])
-        f0_contrib_space[ip, ie] = np.mean([f[1] for f in f0_total])
-        f1_contrib_space[ip, ie] = np.mean([f[1] for f in f1_total])
-        f2_contrib_space[ip, ie] = np.mean([f[1] for f in f2_total])
-        f3_contrib_space[ip, ie] = np.mean([f[1] for f in f3_total])
-        condition_space[ip, ie] = np.argmax([f0_space[ip, ie], f1_space[ip, ie], f2_space[ip, ie], f3_space[ip, ie]])
-        noncontrib_condition_space[ip, ie] = np.argmax(
+        f0_space[ip, ie] = f0_total[-1][0] + f0_total[-1][1]  # use results of the last iteration
+        f1_space[ip, ie] = f1_total[-1][0] + f1_total[-1][1]  # use results of the last iteration
+        f2_space[ip, ie] = f2_total[-1][0] + f2_total[-1][1]  # use results of the last iteration
+        f3_space[ip, ie] = f3_total[-1][0] + f3_total[-1][1]  # use results of the last iteration
+        f0_noncontrib_space[ip, ie] = f0_total[-1][0]  # use results of the last iteration
+        f1_noncontrib_space[ip, ie] = f1_total[-1][0]  # use results of the last iteration
+        f2_noncontrib_space[ip, ie] = f2_total[-1][0]  # use results of the last iteration
+        f3_noncontrib_space[ip, ie] = f3_total[-1][0]  # use results of the last iteration
+        f0_contrib_space[ip, ie] = f0_total[-1][1]  # use results of the last iteration
+        f1_contrib_space[ip, ie] = f1_total[-1][1]  # use results of the last iteration
+        f2_contrib_space[ip, ie] = f2_total[-1][1]  # use results of the last iteration
+        f3_contrib_space[ip, ie] = f3_total[-1][1]  # use results of the last iteration
+        # f0_space[ip, ie] = np.mean([f[0] + f[1] for f in f0_total])
+        # f1_space[ip, ie] = np.mean([f[0] + f[1] for f in f1_total])
+        # f2_space[ip, ie] = np.mean([f[0] + f[1] for f in f2_total])
+        # f3_space[ip, ie] = np.mean([f[0] + f[1] for f in f3_total])
+        # f0_noncontrib_space[ip, ie] = np.mean([f[0] for f in f0_total])
+        # f1_noncontrib_space[ip, ie] = np.mean([f[0] for f in f1_total])
+        # f2_noncontrib_space[ip, ie] = np.mean([f[0] for f in f2_total])
+        # f3_noncontrib_space[ip, ie] = np.mean([f[0] for f in f3_total])
+        # f0_contrib_space[ip, ie] = np.mean([f[1] for f in f0_total])
+        # f1_contrib_space[ip, ie] = np.mean([f[1] for f in f1_total])
+        # f2_contrib_space[ip, ie] = np.mean([f[1] for f in f2_total])
+        # f3_contrib_space[ip, ie] = np.mean([f[1] for f in f3_total])
+        condition_space[ip, ie] = 1 + np.argmax(
+            [
+                f0_space[ip, ie],
+                f1_space[ip, ie],
+                f2_space[ip, ie],
+                f3_space[ip, ie]
+            ]
+        )
+        noncontrib_condition_space[ip, ie] = 1 + np.argmax(
             [
                 f0_noncontrib_space[ip, ie],
                 f1_noncontrib_space[ip, ie],
@@ -117,7 +136,7 @@ for ip in range(N_points):
                 f3_noncontrib_space[ip, ie]
             ]
         )
-        contrib_condition_space[ip, ie] = np.argmax(
+        contrib_condition_space[ip, ie] = 1 + np.argmax(
             [
                 f0_contrib_space[ip, ie],
                 f1_contrib_space[ip, ie],
@@ -225,7 +244,7 @@ plot_matrix_colorbar(
 )
 plot_matrix_colorbar(
     np.array(f3_noncontrib_space),
-    title=f"Threat to self and group: {info}",
+    title=f"Non-contributors. Threat to self and group: {info}",
     mark_values=False,
     xlabel="synergy",
     ylabel="pressure",
