@@ -128,6 +128,12 @@ def simulate_social_identity_model(
                                         contributor[group_agent_row, group_agent_col] += 1  # non-contributor -> contributor
                                     else:
                                         non_contributor[group_agent_row, group_agent_col] += 1  # contributor -> non-contributor
+                                else:
+                                    # stay with the current behavior
+                                    if field[group_agent_row, group_agent_col] == 0:
+                                        non_contributor[group_agent_row, group_agent_col] += 1  # non-contributor -> contributor
+                                    else:
+                                        contributor[group_agent_row, group_agent_col] += 1  # contributor -> non-contributor
                             else:
                                 # weak
                                 if threat_to_group:
@@ -139,6 +145,12 @@ def simulate_social_identity_model(
                                         contributor[group_agent_row, group_agent_col] += 1  # non-contributor -> contributor
                                     else:
                                         non_contributor[group_agent_row, group_agent_col] += 1  # contributor -> non-contributor
+                                else:
+                                    # stay with the current behavior
+                                    if field[group_agent_row, group_agent_col] == 0:
+                                        non_contributor[group_agent_row, group_agent_col] += 1  # non-contributor -> contributor
+                                    else:
+                                        contributor[group_agent_row, group_agent_col] += 1  # contributor -> non-contributor
                 else:
                     new_row, new_col = field.move_from(row, col)
                     contributor[new_row, new_col] = contributor[row, col]
