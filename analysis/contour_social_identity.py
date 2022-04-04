@@ -9,13 +9,12 @@ from matplotlib import pyplot as plt
 from scipy.ndimage import gaussian_filter
 from tqdm import tqdm
 # include the parent directory to the system path
-from lattice.torus import plot_matrix_colorbar, plot_matrix_values
-
 current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
 # include the package
 from social_identity.simulate import simulate_social_identity_model
+from lattice.torus import plot_matrix_colorbar, plot_matrix_values
 
 # parameters of the simulation
 length = 21  # length of the social space
