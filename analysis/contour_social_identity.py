@@ -2,6 +2,7 @@ import os
 import sys
 import inspect
 import time
+from datetime import datetime
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -161,6 +162,8 @@ ax.set_title(f'Averaged for the Social Identity Model:\n{info}')
 ax.set_xlabel('synergy')
 ax.set_ylabel('pressure')
 plt.show()
+now = datetime.now().date()
+np.savetxt(f"averaged_contributors_percent_{now}.csv", PE_MSI, delimiter=",")
 
 fig, ax = plt.subplots(1, 1)
 cp = ax.contourf(syn, pre, gaussian_filter(PE_MSI, 0.5), levels=np.linspace(0, 100, 11))
@@ -169,7 +172,7 @@ ax.set_title(f'Averaged for the Social Identity Model:\n{info} - filtered')
 ax.set_xlabel('synergy')
 ax.set_ylabel('pressure')
 plt.show()
-
+vmax = max(f0_space.max(), f1_space.max(), f2_space.max(), f3_space.max())
 plot_matrix_colorbar(
     np.array(f0_space),
     title=f"No threat to self or group: {info}",
@@ -177,7 +180,9 @@ plot_matrix_colorbar(
     xlabel="synergy",
     ylabel="pressure",
     x=syn,
-    y=pre
+    y=pre,
+    vmin=0,
+    vmax=vmax
 )
 plot_matrix_colorbar(
     np.array(f1_space),
@@ -186,7 +191,9 @@ plot_matrix_colorbar(
     xlabel="synergy",
     ylabel="pressure",
     x=syn,
-    y=pre
+    y=pre,
+    vmin=0,
+    vmax=vmax
 )
 plot_matrix_colorbar(
     np.array(f2_space),
@@ -195,7 +202,9 @@ plot_matrix_colorbar(
     xlabel="synergy",
     ylabel="pressure",
     x=syn,
-    y=pre
+    y=pre,
+    vmin=0,
+    vmax=vmax
 )
 plot_matrix_colorbar(
     np.array(f3_space),
@@ -204,7 +213,9 @@ plot_matrix_colorbar(
     xlabel="synergy",
     ylabel="pressure",
     x=syn,
-    y=pre
+    y=pre,
+    vmin=0,
+    vmax=vmax
 )
 plot_matrix_values(
     condition_space,
@@ -214,7 +225,22 @@ plot_matrix_values(
     xticks=syn,
     yticks=pre
 )
+np.savetxt(f"no_threat_to_self_or_group_{now}.csv", f0_space, delimiter=",")
+np.savetxt(f"threat_to_self_but_not_group_{now}.csv", f1_space, delimiter=",")
+np.savetxt(f"threat_to_group_but_not_self_{now}.csv", f2_space, delimiter=",")
+np.savetxt(f"threat_to_self_and_group_{now}.csv", f3_space, delimiter=",")
+np.savetxt(f"situation-behavior_combinations_{now}.csv", condition_space, delimiter=",")
 
+vmax = max(
+    f0_noncontrib_space.max(),
+    f1_noncontrib_space.max(),
+    f2_noncontrib_space.max(),
+    f3_noncontrib_space.max(),
+    f0_contrib_space.max(),
+    f1_contrib_space.max(),
+    f2_contrib_space.max(),
+    f3_contrib_space.max()
+)
 plot_matrix_colorbar(
     np.array(f0_noncontrib_space),
     title=f"Non-contributors. No threat to self or group: {info}",
@@ -222,7 +248,9 @@ plot_matrix_colorbar(
     xlabel="synergy",
     ylabel="pressure",
     x=syn,
-    y=pre
+    y=pre,
+    vmin=0,
+    vmax=vmax
 )
 plot_matrix_colorbar(
     np.array(f1_noncontrib_space),
@@ -231,7 +259,9 @@ plot_matrix_colorbar(
     xlabel="synergy",
     ylabel="pressure",
     x=syn,
-    y=pre
+    y=pre,
+    vmin=0,
+    vmax=vmax
 )
 plot_matrix_colorbar(
     np.array(f2_noncontrib_space),
@@ -240,7 +270,9 @@ plot_matrix_colorbar(
     xlabel="synergy",
     ylabel="pressure",
     x=syn,
-    y=pre
+    y=pre,
+    vmin=0,
+    vmax=vmax
 )
 plot_matrix_colorbar(
     np.array(f3_noncontrib_space),
@@ -249,7 +281,9 @@ plot_matrix_colorbar(
     xlabel="synergy",
     ylabel="pressure",
     x=syn,
-    y=pre
+    y=pre,
+    vmin=0,
+    vmax=vmax
 )
 plot_matrix_values(
     noncontrib_condition_space,
@@ -259,6 +293,11 @@ plot_matrix_values(
     xticks=syn,
     yticks=pre
 )
+np.savetxt(f"non-contributors_no_threat_to_self_or_group_{now}.csv", f0_noncontrib_space, delimiter=",")
+np.savetxt(f"non-contributors_threat_to_self_but_not_group_{now}.csv", f1_noncontrib_space, delimiter=",")
+np.savetxt(f"non-contributors_threat_to_group_but_not_self_{now}.csv", f2_noncontrib_space, delimiter=",")
+np.savetxt(f"non-contributors_threat_to_self_and_group_{now}.csv", f3_noncontrib_space, delimiter=",")
+np.savetxt(f"non-contributors_situation-behavior_combinations_{now}.csv", noncontrib_condition_space, delimiter=",")
 
 plot_matrix_colorbar(
     np.array(f0_contrib_space),
@@ -267,7 +306,9 @@ plot_matrix_colorbar(
     xlabel="synergy",
     ylabel="pressure",
     x=syn,
-    y=pre
+    y=pre,
+    vmin=0,
+    vmax=vmax
 )
 plot_matrix_colorbar(
     np.array(f1_contrib_space),
@@ -276,7 +317,9 @@ plot_matrix_colorbar(
     xlabel="synergy",
     ylabel="pressure",
     x=syn,
-    y=pre
+    y=pre,
+    vmin=0,
+    vmax=vmax
 )
 plot_matrix_colorbar(
     np.array(f2_contrib_space),
@@ -285,7 +328,9 @@ plot_matrix_colorbar(
     xlabel="synergy",
     ylabel="pressure",
     x=syn,
-    y=pre
+    y=pre,
+    vmin=0,
+    vmax=vmax
 )
 plot_matrix_colorbar(
     np.array(f3_contrib_space),
@@ -294,7 +339,9 @@ plot_matrix_colorbar(
     xlabel="synergy",
     ylabel="pressure",
     x=syn,
-    y=pre
+    y=pre,
+    vmin=0,
+    vmax=vmax
 )
 plot_matrix_values(
     contrib_condition_space,
@@ -304,3 +351,8 @@ plot_matrix_values(
     xticks=syn,
     yticks=pre
 )
+np.savetxt(f"contributors_no_threat_to_self_or_group_{now}.csv", f0_contrib_space, delimiter=",")
+np.savetxt(f"contributors_threat_to_self_but_not_group_{now}.csv", f1_contrib_space, delimiter=",")
+np.savetxt(f"contributors_threat_to_group_but_not_self_{now}.csv", f2_contrib_space, delimiter=",")
+np.savetxt(f"contributors_threat_to_self_and_group_{now}.csv", f3_contrib_space, delimiter=",")
+np.savetxt(f"contributors_situation-behavior_combinations_{now}.csv", contrib_condition_space, delimiter=",")

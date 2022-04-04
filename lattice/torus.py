@@ -51,7 +51,9 @@ def plot_matrix_colorbar(
         xlabel="",
         ylabel="",
         x=None,
-        y=None
+        y=None,
+        vmin=None,
+        vmax=None
 ):
     """
     This function plots the matrix using the color bar to denote colors of cells
@@ -69,14 +71,18 @@ def plot_matrix_colorbar(
             matrix,
             cmap=plt.get_cmap(cmap, len(unique)) if mark_values else cmap,
             edgecolors=edgecolors,
-            linewidths=linewidths
+            linewidths=linewidths,
+            vmin=vmin,
+            vmax=vmax
         )
     else:
         plt.pcolor(
             matrix,
             cmap=plt.get_cmap(cmap, len(unique)) if mark_values else cmap,
             edgecolors=edgecolors,
-            linewidths=linewidths
+            linewidths=linewidths,
+            vmin=vmin,
+            vmax=vmax
         )
     cbar = plt.colorbar()
     if mark_values:
@@ -196,30 +202,28 @@ class TorusLattice:
             random.shuffle(agents)
         return agents
 
-    def move_from(self, row: int, col: int, radius=1):
+    def move_from(self, row: int, col: int):
         """
-        Moves the value from the specific cell the random neighbor empty cell.
-        Cells from the square [-radius + row; radius + row] x [-radius + col; radius + col] are neighbors.
+        Moves the value from the specific cell the random closest empty cell.
 
         :param row: Index of the row
         :param col: Index of the column
-        :param radius: The radius value
         :return: new row, new column
         """
         if self.__getitem__((row, col)) != self.empty_node_value:
-            can_move = []
-            dirs = [(i, j) for i in range(-radius, radius + 1, radius) for j in range(-radius, radius + 1, radius)]
-            for d in dirs:
-                x = (row + d[0]) % self.order
-                y = (col + d[1]) % self.order
-                if self.field[x, y] == self.empty_node_value:
-                    can_move.append((x, y))
-
-            if can_move:
-                x, y = random.choice(can_move)
-                self.field[x, y] = self.field[row, col]
-                self.field[row, col] = self.empty_node_value
-                return x, y
+            for offset in range(1, int(self.order / 2)):
+                can_move = []
+                dirs = [(i, j) for i in range(-offset, offset + 1, 1) for j in range(-offset, offset + 1, 1)]
+                for d in dirs:
+                    x = (row + d[0]) % self.order
+                    y = (col + d[1]) % self.order
+                    if self.field[x, y] == self.empty_node_value:
+                        can_move.append((x, y))
+                if can_move:
+                    x, y = random.choice(can_move)
+                    self.field[x, y] = self.field[row, col]
+                    self.field[row, col] = self.empty_node_value
+                    return x, y
         return row, col
 
     def land_agents(self, density: float, initial_percent: float, agent_value: int = 0, effort: int = 1):
