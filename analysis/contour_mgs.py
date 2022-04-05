@@ -2,6 +2,7 @@ import os
 import sys
 import inspect
 import time
+from datetime import datetime
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -19,7 +20,8 @@ length = 21  # length of the social space
 density = 0.3  # density of spots randomly occupied by agents
 initial_percent = 0.3  # initial percent of contributing agents
 tick_max = 200  # the maximum number of attempts at one simulation
-Ngrid = 5  # number of points in ranges for synergy and pressure
+Ngrid = 11  # number of points in ranges for synergy and pressure
+use_groups = True  # if True then the simulation uses the frequency of behaviour changes in groups
 # create ranges for the simulation
 syn = np.linspace(0, 10, Ngrid)  # grid nodes for synergy
 pre = np.linspace(0, 10, Ngrid)  # grid nodes for pressure
@@ -45,7 +47,8 @@ for ip in range(N_points):
                 pressure=pre[ip],
                 synergy=syn[ie],
                 tick_max=tick_max,
-                show_plot_every=0
+                show_plot_every=0,
+                use_groups=use_groups
             )
 
             fin_MSI.append(per_cont_model1[-1])
@@ -78,4 +81,5 @@ ax.set_xlabel('synergy')
 ax.set_ylabel('pressure')
 plt.show()
 
-
+now = datetime.now().date()
+np.savetxt(f"averaged_contributors_percent_mgs_{now}.csv", PE_MSI, delimiter=",")

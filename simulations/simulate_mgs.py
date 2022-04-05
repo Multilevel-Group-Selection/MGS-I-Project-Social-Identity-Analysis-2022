@@ -10,7 +10,8 @@ percent_of_contributors = simulate_base_model(
     pressure=8,
     synergy=9,
     tick_max=1000,
-    show_plot_every=0
+    show_plot_every=0,
+    use_groups=True
 )
 
 plt.plot(percent_of_contributors)
