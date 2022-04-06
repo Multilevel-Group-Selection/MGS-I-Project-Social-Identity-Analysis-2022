@@ -23,6 +23,7 @@ initial_percent = 0.3  # initial percent of contributing agents
 use_strong_commitment = False  # if True then the model applies the strong commitment else the model applies the weak commitment
 tick_max = 200  # the maximum number of attempts at one simulation
 Ngrid = 11  # number of points in ranges for synergy and pressure
+vmax = 120000  # the maximum value at legends for frequencies
 # create ranges for the simulation
 syn = np.linspace(0, 10, Ngrid)  # grid nodes for synergy
 pre = np.linspace(0, 10, Ngrid)  # grid nodes for pressure
@@ -171,7 +172,7 @@ ax.set_title(f'Averaged for the Social Identity Model:\n{info} - filtered')
 ax.set_xlabel('synergy')
 ax.set_ylabel('pressure')
 plt.show()
-vmax = max(f0_space.max(), f1_space.max(), f2_space.max(), f3_space.max())
+# vmax = max(f0_space.max(), f1_space.max(), f2_space.max(), f3_space.max())
 plot_matrix_colorbar(
     np.array(f0_space),
     title=f"No threat to self or group: {info}",
@@ -230,19 +231,19 @@ np.savetxt(f"threat_to_group_but_not_self_{now}.csv", f2_space, delimiter=",")
 np.savetxt(f"threat_to_self_and_group_{now}.csv", f3_space, delimiter=",")
 np.savetxt(f"situation-behavior_combinations_{now}.csv", condition_space, delimiter=",")
 
-vmax = max(
-    f0_noncontrib_space.max(),
-    f1_noncontrib_space.max(),
-    f2_noncontrib_space.max(),
-    f3_noncontrib_space.max(),
-    f0_contrib_space.max(),
-    f1_contrib_space.max(),
-    f2_contrib_space.max(),
-    f3_contrib_space.max()
-)
+# vmax = max(
+#     f0_noncontrib_space.max(),
+#     f1_noncontrib_space.max(),
+#     f2_noncontrib_space.max(),
+#     f3_noncontrib_space.max(),
+#     f0_contrib_space.max(),
+#     f1_contrib_space.max(),
+#     f2_contrib_space.max(),
+#     f3_contrib_space.max()
+# )
 plot_matrix_colorbar(
     np.array(f0_noncontrib_space),
-    title=f"Non-contributors. No threat to self or group: {info}",
+    title=f"Non-contributors. No threat to self or group:\n{info}",
     mark_values=False,
     xlabel="synergy",
     ylabel="pressure",
@@ -253,7 +254,7 @@ plot_matrix_colorbar(
 )
 plot_matrix_colorbar(
     np.array(f1_noncontrib_space),
-    title=f"Non-contributors. Threat to self but not group: {info}",
+    title=f"Non-contributors. Threat to self but not group:\n{info}",
     mark_values=False,
     xlabel="synergy",
     ylabel="pressure",
@@ -264,7 +265,7 @@ plot_matrix_colorbar(
 )
 plot_matrix_colorbar(
     np.array(f2_noncontrib_space),
-    title=f"Non-contributors. Threat to group but not self: {info}",
+    title=f"Non-contributors. Threat to group but not self:\n{info}",
     mark_values=False,
     xlabel="synergy",
     ylabel="pressure",
@@ -275,7 +276,7 @@ plot_matrix_colorbar(
 )
 plot_matrix_colorbar(
     np.array(f3_noncontrib_space),
-    title=f"Non-contributors. Threat to self and group: {info}",
+    title=f"Non-contributors. Threat to self and group:\n{info}",
     mark_values=False,
     xlabel="synergy",
     ylabel="pressure",
@@ -286,7 +287,7 @@ plot_matrix_colorbar(
 )
 plot_matrix_values(
     noncontrib_condition_space,
-    title=f"Non-contributors. Situation-Behavior Combinations: {info}",
+    title=f"Non-contributors. Situation-Behavior Combinations:\n{info}",
     xlabel="synergy",
     ylabel="pressure",
     xticks=syn,
@@ -300,7 +301,7 @@ np.savetxt(f"non-contributors_situation-behavior_combinations_{now}.csv", noncon
 
 plot_matrix_colorbar(
     np.array(f0_contrib_space),
-    title=f"Contributors. No threat to self or group: {info}",
+    title=f"Contributors. No threat to self or group:\n{info}",
     mark_values=False,
     xlabel="synergy",
     ylabel="pressure",
@@ -311,7 +312,7 @@ plot_matrix_colorbar(
 )
 plot_matrix_colorbar(
     np.array(f1_contrib_space),
-    title=f"Contributors. Threat to self but not group: {info}",
+    title=f"Contributors. Threat to self but not group:\n{info}",
     mark_values=False,
     xlabel="synergy",
     ylabel="pressure",
@@ -322,7 +323,7 @@ plot_matrix_colorbar(
 )
 plot_matrix_colorbar(
     np.array(f2_contrib_space),
-    title=f"Contributors. Threat to group but not self: {info}",
+    title=f"Contributors. Threat to group but not self:\n{info}",
     mark_values=False,
     xlabel="synergy",
     ylabel="pressure",
@@ -333,7 +334,7 @@ plot_matrix_colorbar(
 )
 plot_matrix_colorbar(
     np.array(f3_contrib_space),
-    title=f"Contributors. Threat to self and group: {info}",
+    title=f"Contributors. Threat to self and group:\n{info}",
     mark_values=False,
     xlabel="synergy",
     ylabel="pressure",
@@ -344,7 +345,7 @@ plot_matrix_colorbar(
 )
 plot_matrix_values(
     contrib_condition_space,
-    title=f"Contributors. Situation-Behavior Combinations: {info}",
+    title=f"Contributors. Situation-Behavior Combinations:\n{info}",
     xlabel="synergy",
     ylabel="pressure",
     xticks=syn,
