@@ -1,6 +1,13 @@
+import inspect
+import os
+import sys
+
 import matplotlib.pyplot as plt
 import numpy as np
-
+# include the parent directory to the system path
+current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parent_dir = os.path.dirname(current_dir)
+sys.path.insert(0, parent_dir)
 from social_identity.simulate import simulate_social_identity_model
 
 # Parameters of the simulation

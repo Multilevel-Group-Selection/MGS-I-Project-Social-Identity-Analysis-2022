@@ -93,8 +93,8 @@ def simulate_base_model(
         density: float,
         initial_percent: float,
         effort: int,
-        pressure: int,
-        synergy: int,
+        pressure: float,
+        synergy: float,
         tick_max: int = 200,
         show_plot_every: int = 0,
         use_groups: bool = False
