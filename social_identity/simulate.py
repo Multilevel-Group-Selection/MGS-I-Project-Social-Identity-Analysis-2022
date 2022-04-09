@@ -48,8 +48,7 @@ def simulate_social_identity_model(
             group = field.nonempty_in_radius(row, col, radius=1)
             agents_in_radius = len(group)
             neighbors_number = agents_in_radius - 1
-            focal_agent_benefit = synergy * effort * field.nonempty_number_in_radius(row, col, radius=1,
-                                                                                     value=effort) / agents_in_radius
+            focal_agent_benefit = synergy * effort * field.nonempty_number_in_radius(row, col, radius=1, value=effort) / agents_in_radius
             is_focal_agent_threat_to_self = (
                     field[row, col] == effort and focal_agent_benefit <= pressure or
                     field[row, col] == 0 and effort + focal_agent_benefit <= pressure
@@ -70,9 +69,8 @@ def simulate_social_identity_model(
                 for group_agent in group:
                     group_agent_row, group_agent_col = group_agent
                     # benefit = synergy * effort * field.nonempty_number_in_radius(group_agent_row, group_agent_col, radius=1, value=effort) / field.nonempty_number_in_radius(group_agent_row, group_agent_col, radius=1)
-                    aggents_with_effort = len(
-                        [1 for (r, c) in group if field[r, c] == field[group_agent_row, group_agent_col]])
-                    benefit = synergy * effort * aggents_with_effort / agents_in_radius
+                    agents_with_effort = len([1 for (r, c) in group if field[r, c] == effort])
+                    benefit = synergy * effort * agents_with_effort / agents_in_radius
                     effort_and_benefit = field[group_agent_row, group_agent_col] + benefit
                     retained_efforts_and_benefits.append(effort_and_benefit)
                     benefit_from_group.append(benefit)

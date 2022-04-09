@@ -158,7 +158,9 @@ class TorusLattice:
         offset_list = list(range(-radius, radius + 1))
         for r in offset_list:
             for c in offset_list:
-                e = self.__getitem__((row + r, col + c))
+                i = (row + r) % self.order
+                j = (col + c) % self.order
+                e = self.field[i, j]
                 if e != self.empty_node_value and (value is None or value == e):
                     count += 1
         return count
