@@ -66,22 +66,33 @@ def simulate_social_identity_model(
                 retained_efforts_and_benefits = []
                 benefit_from_group = []
                 threat_to_self_values = []
+                non_focal_threat_to_self = []
+                group_effort = 0
                 for group_agent in group:
                     group_agent_row, group_agent_col = group_agent
+                    group_effort += field[group_agent_row, group_agent_col]
                     # benefit = synergy * effort * field.nonempty_number_in_radius(group_agent_row, group_agent_col, radius=1, value=effort) / field.nonempty_number_in_radius(group_agent_row, group_agent_col, radius=1)
                     agents_with_effort = len([1 for (r, c) in group if field[r, c] == effort])
                     benefit = synergy * effort * agents_with_effort / agents_in_radius
                     effort_and_benefit = field[group_agent_row, group_agent_col] + benefit
                     retained_efforts_and_benefits.append(effort_and_benefit)
                     benefit_from_group.append(benefit)
-                    threat_to_self_values.append(
-                        field[group_agent_row, group_agent_col] == effort and benefit <= pressure or
-                        field[group_agent_row, group_agent_col] == 0 and effort + benefit <= pressure
-                    )
+                    threat_to_self = field[group_agent_row, group_agent_col] == effort and benefit <= pressure or \
+                                     field[group_agent_row, group_agent_col] == 0 and effort + benefit <= pressure
+                    threat_to_self_values.append(threat_to_self)
+                    if group_agent_row != row or group_agent_col != col:
+                        non_focal_threat_to_self.append(threat_to_self)
                 # Calculate the group’s average retained effort and benefit-from-group
                 retained_efforts_and_benefits_average = sum(retained_efforts_and_benefits) / len(retained_efforts_and_benefits)
                 threat_to_group = (retained_efforts_and_benefits_average <= pressure)
-                members_need_help = any(threat_to_self_values) and (field[row, col] == 0)  # True if at least one group's memeber "retained effort and benefit" below the pressure level
+                members_need_help = any(non_focal_threat_to_self) and (field[row, col] == 0)  # True if at least one group's memeber "retained effort and benefit" below the pressure level
+                group_effort /= len(group)
+                if group_effort < 0.5:
+                    group_type = 0
+                elif group_effort > 0.5:
+                    group_type = effort
+                else:
+                    group_type = None
                 if not is_focal_agent_threat_to_self and not threat_to_group:
                     not_focal_agent_threat_to_self_not_threat_group[field[row, col]] += 1
                 elif is_focal_agent_threat_to_self and not threat_to_group:
@@ -93,7 +104,10 @@ def simulate_social_identity_model(
                 if use_strong_commitment:
                     # strong conditions
                     # change behavior
-                    if (not is_focal_agent_threat_to_self and not threat_to_group) or (is_focal_agent_threat_to_self and not threat_to_group) or (not is_focal_agent_threat_to_self and threat_to_group and members_need_help):
+                    if (not is_focal_agent_threat_to_self and not threat_to_group and field[row, col] != group_type and group_type is not None) or \
+                            (not is_focal_agent_threat_to_self and not threat_to_group and members_need_help) or \
+                            (is_focal_agent_threat_to_self and not threat_to_group and field[row, col] != group_type and group_type is not None) or \
+                            (not is_focal_agent_threat_to_self and threat_to_group and members_need_help):
                         if field[row, col] == 0:
                             contributor[row, col] += 1  # non-contributor -> contributor
                         else:
@@ -101,7 +115,7 @@ def simulate_social_identity_model(
                     is_focal_agent_leads_to_leave_group = (is_focal_agent_threat_to_self and threat_to_group)
                 else:
                     # weak conditions
-                    if is_focal_agent_threat_to_self and not threat_to_group:
+                    if is_focal_agent_threat_to_self and not threat_to_group and field[row, col] != group_type and group_type is not None:
                         # Change behavior if not group’s
                         if field[row, col] == 0:
                             contributor[row, col] += 1  # non-contributor -> contributor
@@ -120,7 +134,10 @@ def simulate_social_identity_model(
                                 if threat_to_group and threat_to_self:
                                     # If the group member’s behavior resulted in a move, then remove/hide that member from that group but do not actually move them (since they are a core member in the neighboring group)
                                     continue
-                                if (not threat_to_self and not threat_to_group) or (threat_to_self and not threat_to_group) or (not threat_to_self and threat_to_group and members_need_help):
+                                if (not threat_to_self and not threat_to_group and field[group_agent_row, group_agent_col] != group_type and group_type is not None) or \
+                                        (not threat_to_self and not threat_to_group and members_need_help) or \
+                                        (threat_to_self and not threat_to_group and field[group_agent_row, group_agent_col] != group_type and group_type is not None) or \
+                                        (not threat_to_self and threat_to_group and members_need_help):
                                     # Change behavior if not group’s
                                     if field[group_agent_row, group_agent_col] == 0:
                                         contributor[group_agent_row, group_agent_col] += 1  # non-contributor -> contributor
@@ -137,7 +154,7 @@ def simulate_social_identity_model(
                                 if threat_to_group:
                                     # If the group member’s behavior resulted in a move, then remove/hide that member from that group but do not actually move them (since they are a core member in the neighboring group)
                                     continue
-                                elif threat_to_self and not threat_to_group:
+                                elif threat_to_self and not threat_to_group and field[group_agent_row, group_agent_col] != group_type and group_type is not None:
                                     # Change behavior if not group’s
                                     if field[group_agent_row, group_agent_col] == 0:
                                         contributor[group_agent_row, group_agent_col] += 1  # non-contributor -> contributor
