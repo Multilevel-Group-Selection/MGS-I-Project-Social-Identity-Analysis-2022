@@ -74,7 +74,7 @@ def simulate_social_identity_model(
                     # benefit = synergy * effort * field.nonempty_number_in_radius(group_agent_row, group_agent_col, radius=1, value=effort) / field.nonempty_number_in_radius(group_agent_row, group_agent_col, radius=1)
                     agents_with_effort = len([1 for (r, c) in group if field[r, c] == effort])
                     benefit = synergy * effort * agents_with_effort / agents_in_radius
-                    effort_and_benefit = field[group_agent_row, group_agent_col] + benefit
+                    effort_and_benefit = benefit + (0 if field[group_agent_row, group_agent_col] == effort else effort)
                     retained_efforts_and_benefits.append(effort_and_benefit)
                     benefit_from_group.append(benefit)
                     threat_to_self = field[group_agent_row, group_agent_col] == effort and benefit <= pressure or \

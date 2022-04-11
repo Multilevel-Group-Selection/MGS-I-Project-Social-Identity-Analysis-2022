@@ -12,11 +12,11 @@ from social_identity.simulate import simulate_social_identity_model
 
 # Parameters of the simulation
 length = 21
-density = 0.7
+density = 0.3
 initial_percent = 0.3
 effort = 1
-pressure = 6
-synergy = 10
+pressure = 0.5
+synergy = 5
 use_strong_commitment = True  # If True then the strong commitment is applied else the weak commitment is applied
 tick_max = 200
 show_plot_every = 0  # if > 0 then the social space is plotted every show_plot_every iteration
