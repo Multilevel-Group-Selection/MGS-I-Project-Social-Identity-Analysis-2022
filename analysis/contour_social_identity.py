@@ -20,7 +20,7 @@ from lattice.torus import plot_matrix_colorbar, plot_matrix_values
 length = 21  # length of the social space
 density = 0.3  # density of spots randomly occupied by agents
 initial_percent = 0.3  # initial percent of contributing agents
-use_strong_commitment = False  # if True then the model applies the strong commitment else the model applies the weak commitment
+use_strong_commitment = True  # if True then the model applies the strong commitment else the model applies the weak commitment
 tick_max = 200  # the maximum number of attempts at one simulation
 Ngrid = 11  # number of points in ranges for synergy and pressure
 vmax = 120000  # the maximum value at legends for frequencies
