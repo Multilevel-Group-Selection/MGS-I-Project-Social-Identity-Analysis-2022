@@ -187,6 +187,7 @@ non_contrib_ticks_number = ticks_number[non_contrib_idx]
 average_ticks_non_contrib_number = np.mean(non_contrib_ticks_number) if len(non_contrib_ticks_number) > 0 else None
 min_ticks_non_contrib_number = np.min(non_contrib_ticks_number) if len(non_contrib_ticks_number) > 0 else None
 max_ticks_non_contrib_number = np.max(non_contrib_ticks_number) if len(non_contrib_ticks_number) > 0 else None
+print("---")
 print(f"Total in {N_runs} simulations")
 print(f"number of synergy-pressure pairs with full adoption: {contributors_number}")
 print(f"number of synergy-pressure pairs with zero adoption: {non_contributors_number}")
@@ -198,6 +199,34 @@ print(f"maximum number of ticks to get full adoption: {max_ticks_contrib_number}
 print(f"minimum number of ticks to get zero adoption: {min_ticks_non_contrib_number}")
 print(f"average number of ticks to get zero adoption: {average_ticks_non_contrib_number}")
 print(f"maximum number of ticks to get zero adoption: {max_ticks_non_contrib_number}")
+print("---")
+contrib_idx = np.where(mean_contributors_percent > 100.0 - epsilon)
+non_contrib_idx = np.where(mean_contributors_percent < epsilon)
+contributors_number = len(contrib_idx[0])
+non_contributors_number = len(non_contrib_idx[0])
+mean_run_contributors_percent = np.mean(mean_contributors_percent[np.where((epsilon <= mean_contributors_percent) & (mean_contributors_percent <= 100.0 - epsilon))])
+average_ticks_number = np.mean(ticks_number)
+contrib_ticks_number = ticks_number[contrib_idx]
+average_ticks_contrib_number = np.mean(contrib_ticks_number) if len(contrib_ticks_number) > 0 else None
+min_ticks_contrib_number = np.min(contrib_ticks_number) if len(contrib_ticks_number) > 0 else None
+max_ticks_contrib_number = np.max(contrib_ticks_number) if len(contrib_ticks_number) > 0 else None
+non_contrib_ticks_number = ticks_number[non_contrib_idx]
+average_ticks_non_contrib_number = np.mean(non_contrib_ticks_number) if len(non_contrib_ticks_number) > 0 else None
+min_ticks_non_contrib_number = np.min(non_contrib_ticks_number) if len(non_contrib_ticks_number) > 0 else None
+max_ticks_non_contrib_number = np.max(non_contrib_ticks_number) if len(non_contrib_ticks_number) > 0 else None
+print("---")
+print(f"Averaged in {N_runs} simulations")
+print(f"number of synergy-pressure pairs with full adoption: {contributors_number}")
+print(f"number of synergy-pressure pairs with zero adoption: {non_contributors_number}")
+print(f"average percent of contributors excluding zero and full adoption: {mean_run_contributors_percent}")
+print(f"average number of ticks in the simulation: {average_ticks_number}")
+print(f"minimum number of ticks to get full adoption: {min_ticks_contrib_number}")
+print(f"average number of ticks to get full adoption: {average_ticks_contrib_number}")
+print(f"maximum number of ticks to get full adoption: {max_ticks_contrib_number}")
+print(f"minimum number of ticks to get zero adoption: {min_ticks_non_contrib_number}")
+print(f"average number of ticks to get zero adoption: {average_ticks_non_contrib_number}")
+print(f"maximum number of ticks to get zero adoption: {max_ticks_non_contrib_number}")
+print("---")
 
 fig, ax = plt.subplots(1, 1)
 cp = ax.contourf(syn, pre, mean_contributors_percent, levels=np.linspace(0, 100, 11))
