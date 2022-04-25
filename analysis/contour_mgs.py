@@ -9,13 +9,12 @@ from matplotlib import pyplot as plt
 from scipy.ndimage import gaussian_filter
 from tqdm import tqdm
 # include the parent directory to the system path
-from analysis.statistics import print_stats
-
 current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
 # include the package
 from mgs.simulate import simulate_base_model
+from analysis.statistics import print_stats
 
 # parameters of the simulation
 length = 21  # length of the social space
