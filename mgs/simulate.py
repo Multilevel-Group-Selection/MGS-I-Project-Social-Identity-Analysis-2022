@@ -97,7 +97,8 @@ def simulate_base_model(
         synergy: float,
         tick_max: int = 200,
         show_plot_every: int = 0,
-        use_groups: bool = False
+        use_groups: bool = False,
+        stop_on_adoption=True
 ):
     field = TorusLattice(length)
     population, contrib_initial = field.land_agents(
@@ -113,7 +114,7 @@ def simulate_base_model(
     effort_agents_number = len(field.nonempty(value=effort))
     percent_of_contributors = [effort_agents_number / population]
     tick = 0
-    while 0 < effort_agents_number < population and tick < tick_max:
+    while (0 < effort_agents_number < population or not stop_on_adoption) and tick < tick_max:
         potentially_moving(field, effort, synergy, pressure)
         if use_groups:
             potentially_changing_behavior_groups(field, effort, synergy, pressure)

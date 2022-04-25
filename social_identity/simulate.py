@@ -14,7 +14,8 @@ def simulate_social_identity_model(
         synergy: float,
         use_strong_commitment: bool = True,
         tick_max: int = 200,
-        show_plot_every: int = 0
+        show_plot_every: int = 0,
+        stop_on_adoption=True
 ):
     field = TorusLattice(length)
     population, contrib_initial = field.land_agents(
@@ -35,7 +36,7 @@ def simulate_social_identity_model(
     focal_agent_threat_to_self_not_threat_group_freq = []
     not_focal_agent_threat_to_self_threat_group_freq = []
     focal_agent_threat_to_self_threat_group_freq = []
-    while 0 < contributors_number < population and tick < tick_max:
+    while (0 < contributors_number < population or not stop_on_adoption) and tick < tick_max:
         agents_list = field.nonempty()
         contributor = np.zeros((length, length))
         non_contributor = np.zeros((length, length))

@@ -8,7 +8,7 @@ from typing import Optional
 def plot_matrix_values(
         matrix: np.ndarray,
         title: str,
-        cmap="viridis",
+        cmap="Reds",
         vmin=1,
         vmax=4,
         xlabel="",

@@ -22,10 +22,11 @@ length = 21  # length of the social space
 density = 0.3  # density of spots randomly occupied by agents
 initial_percent = 0.3  # initial percent of contributing agents
 use_strong_commitment = True  # if True then the model applies the strong commitment else the model applies the weak commitment
-tick_max = 25  # the maximum number of attempts at one simulation
-Ngrid = 31  # number of points in ranges for synergy and pressure
+tick_max = 200  # the maximum number of attempts at one simulation
+Ngrid = 11  # number of points in ranges for synergy and pressure
 vmax = 120000  # the maximum value at legends for frequencies
 epsilon = 1.0E-6  # zero at the floating numbers comparison
+stop_on_adoption = False  # if False then the simulation isn't stopped on all contributors of all non-contributors
 # create ranges for the simulation
 syn = np.linspace(0, 10, Ngrid)  # grid nodes for synergy
 pre = np.linspace(0, 10, Ngrid)  # grid nodes for pressure
@@ -70,10 +71,11 @@ for ip in range(N_points):
                 synergy=syn[ie],
                 use_strong_commitment=use_strong_commitment,  # If True then the strong commitment is applied else the weak commitment is applied
                 tick_max=tick_max,
-                show_plot_every=0
+                show_plot_every=0,
+                stop_on_adoption=stop_on_adoption
             )
             contributors_percent[ip, ie, i] = per_cont_model1[-1]
-            ticks_number[ip, ie, i] = len(per_cont_model1)
+            ticks_number[ip, ie, i] = len(per_cont_model1) - 1
             f0_total.append(
                 {
                     0: sum(f[0] for f in f0),

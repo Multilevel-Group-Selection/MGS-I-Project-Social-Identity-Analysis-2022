@@ -24,6 +24,7 @@ tick_max = 200  # the maximum number of attempts at one simulation
 Ngrid = 11  # number of points in ranges for synergy and pressure
 use_groups = True  # if True then the simulation uses the frequency of behaviour changes in groups
 epsilon = 1.0E-6  # zero at the floating numbers comparison
+stop_on_adoption = False  # if False then the simulation isn't stopped on all contributors of all non-contributors
 # create ranges for the simulation
 syn = np.linspace(0, 10, Ngrid)  # grid nodes for synergy
 pre = np.linspace(0, 10, Ngrid)  # grid nodes for pressure
@@ -49,10 +50,11 @@ for ip in range(N_points):
                 synergy=syn[ie],
                 tick_max=tick_max,
                 show_plot_every=0,
-                use_groups=use_groups
+                use_groups=use_groups,
+                stop_on_adoption=stop_on_adoption
             )
             contributors_percent[ip, ie, i] = per_cont_model1[-1]
-            ticks_number[ip, ie, i] = len(per_cont_model1)
+            ticks_number[ip, ie, i] = len(per_cont_model1) - 1
     print(f"Completed {ip + 1} form {N_points}")
 
 mean_contributors_percent = np.mean(contributors_percent, axis=2)
