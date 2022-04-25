@@ -15,14 +15,15 @@ sys.path.insert(0, parent_dir)
 # include the package
 from social_identity.simulate import simulate_social_identity_model
 from lattice.torus import plot_matrix_colorbar, plot_matrix_values
+from analysis.statistics import print_stats
 
 # parameters of the simulation
 length = 21  # length of the social space
 density = 0.3  # density of spots randomly occupied by agents
 initial_percent = 0.3  # initial percent of contributing agents
 use_strong_commitment = True  # if True then the model applies the strong commitment else the model applies the weak commitment
-tick_max = 200  # the maximum number of attempts at one simulation
-Ngrid = 11  # number of points in ranges for synergy and pressure
+tick_max = 25  # the maximum number of attempts at one simulation
+Ngrid = 31  # number of points in ranges for synergy and pressure
 vmax = 120000  # the maximum value at legends for frequencies
 epsilon = 1.0E-6  # zero at the floating numbers comparison
 # create ranges for the simulation
@@ -145,88 +146,25 @@ print('time of simulations')
 print(time.time() - start_time)
 print("Report on each run")
 for i in range(N_runs):
+    print(f"Simulation #: {i + 1}")
     run_contrib_space = contributors_percent[:, :, i]
     run_ticks_number = ticks_number[:, :, i]
-    contrib_idx = np.where(run_contrib_space > 100.0 - epsilon)
-    non_contrib_idx = np.where(run_contrib_space < epsilon)
-    contributors_number = len(contrib_idx[0])
-    non_contributors_number = len(non_contrib_idx[0])
-    mean_run_contributors_percent = np.mean(run_contrib_space[np.where((epsilon <= run_contrib_space) & (run_contrib_space <= 100.0 - epsilon))])
-    average_ticks_number = np.mean(run_ticks_number)
-    contrib_ticks_number = ticks_number[contrib_idx]
-    average_ticks_contrib_number = np.mean(contrib_ticks_number) if len(contrib_ticks_number) > 0 else None
-    min_ticks_contrib_number = np.min(contrib_ticks_number) if len(contrib_ticks_number) > 0 else None
-    max_ticks_contrib_number = np.max(contrib_ticks_number) if len(contrib_ticks_number) > 0 else None
-    non_contrib_ticks_number = ticks_number[non_contrib_idx]
-    average_ticks_non_contrib_number = np.mean(non_contrib_ticks_number) if len(non_contrib_ticks_number) > 0 else None
-    min_ticks_non_contrib_number = np.min(non_contrib_ticks_number) if len(non_contrib_ticks_number) > 0 else None
-    max_ticks_non_contrib_number = np.max(non_contrib_ticks_number) if len(non_contrib_ticks_number) > 0 else None
-    print(f"simulation #: {i + 1}")
-    print(f"number of synergy-pressure pairs with full adoption: {contributors_number}")
-    print(f"number of synergy-pressure pairs with zero adoption: {non_contributors_number}")
-    print(f"average percent of contributors excluding zero and full adoption: {mean_run_contributors_percent}")
-    print(f"average number of ticks in the simulation: {average_ticks_number}")
-    print(f"minimum number of ticks to get full adoption: {min_ticks_contrib_number}")
-    print(f"average number of ticks to get full adoption: {average_ticks_contrib_number}")
-    print(f"maximum number of ticks to get full adoption: {max_ticks_contrib_number}")
-    print(f"minimum number of ticks to get zero adoption: {min_ticks_non_contrib_number}")
-    print(f"average number of ticks to get zero adoption: {average_ticks_non_contrib_number}")
-    print(f"maximum number of ticks to get zero adoption: {max_ticks_non_contrib_number}")
-    print("---")
-contrib_idx = np.where(contributors_percent > 100.0 - epsilon)
-non_contrib_idx = np.where(contributors_percent < epsilon)
-contributors_number = len(contrib_idx[0])
-non_contributors_number = len(non_contrib_idx[0])
-mean_run_contributors_percent = np.mean(contributors_percent[np.where((epsilon <= contributors_percent) & (contributors_percent <= 100.0 - epsilon))])
-average_ticks_number = np.mean(ticks_number)
-contrib_ticks_number = ticks_number[contrib_idx]
-average_ticks_contrib_number = np.mean(contrib_ticks_number) if len(contrib_ticks_number) > 0 else None
-min_ticks_contrib_number = np.min(contrib_ticks_number) if len(contrib_ticks_number) > 0 else None
-max_ticks_contrib_number = np.max(contrib_ticks_number) if len(contrib_ticks_number) > 0 else None
-non_contrib_ticks_number = ticks_number[non_contrib_idx]
-average_ticks_non_contrib_number = np.mean(non_contrib_ticks_number) if len(non_contrib_ticks_number) > 0 else None
-min_ticks_non_contrib_number = np.min(non_contrib_ticks_number) if len(non_contrib_ticks_number) > 0 else None
-max_ticks_non_contrib_number = np.max(non_contrib_ticks_number) if len(non_contrib_ticks_number) > 0 else None
-print("---")
+    print_stats(
+        contrib_space=contributors_percent[:, :, i],
+        ticks_space=ticks_number[:, :, i]
+    )
+
 print(f"Total in {N_runs} simulations")
-print(f"number of synergy-pressure pairs with full adoption: {contributors_number}")
-print(f"number of synergy-pressure pairs with zero adoption: {non_contributors_number}")
-print(f"average percent of contributors excluding zero and full adoption: {mean_run_contributors_percent}")
-print(f"average number of ticks in the simulation: {average_ticks_number}")
-print(f"minimum number of ticks to get full adoption: {min_ticks_contrib_number}")
-print(f"average number of ticks to get full adoption: {average_ticks_contrib_number}")
-print(f"maximum number of ticks to get full adoption: {max_ticks_contrib_number}")
-print(f"minimum number of ticks to get zero adoption: {min_ticks_non_contrib_number}")
-print(f"average number of ticks to get zero adoption: {average_ticks_non_contrib_number}")
-print(f"maximum number of ticks to get zero adoption: {max_ticks_non_contrib_number}")
-print("---")
-contrib_idx = np.where(mean_contributors_percent > 100.0 - epsilon)
-non_contrib_idx = np.where(mean_contributors_percent < epsilon)
-contributors_number = len(contrib_idx[0])
-non_contributors_number = len(non_contrib_idx[0])
-mean_run_contributors_percent = np.mean(mean_contributors_percent[np.where((epsilon <= mean_contributors_percent) & (mean_contributors_percent <= 100.0 - epsilon))])
-average_ticks_number = np.mean(ticks_number)
-contrib_ticks_number = ticks_number[contrib_idx]
-average_ticks_contrib_number = np.mean(contrib_ticks_number) if len(contrib_ticks_number) > 0 else None
-min_ticks_contrib_number = np.min(contrib_ticks_number) if len(contrib_ticks_number) > 0 else None
-max_ticks_contrib_number = np.max(contrib_ticks_number) if len(contrib_ticks_number) > 0 else None
-non_contrib_ticks_number = ticks_number[non_contrib_idx]
-average_ticks_non_contrib_number = np.mean(non_contrib_ticks_number) if len(non_contrib_ticks_number) > 0 else None
-min_ticks_non_contrib_number = np.min(non_contrib_ticks_number) if len(non_contrib_ticks_number) > 0 else None
-max_ticks_non_contrib_number = np.max(non_contrib_ticks_number) if len(non_contrib_ticks_number) > 0 else None
-print("---")
+print_stats(
+    contrib_space=contributors_percent,
+    ticks_space=ticks_number
+)
+
 print(f"Averaged in {N_runs} simulations")
-print(f"number of synergy-pressure pairs with full adoption: {contributors_number}")
-print(f"number of synergy-pressure pairs with zero adoption: {non_contributors_number}")
-print(f"average percent of contributors excluding zero and full adoption: {mean_run_contributors_percent}")
-print(f"average number of ticks in the simulation: {average_ticks_number}")
-print(f"minimum number of ticks to get full adoption: {min_ticks_contrib_number}")
-print(f"average number of ticks to get full adoption: {average_ticks_contrib_number}")
-print(f"maximum number of ticks to get full adoption: {max_ticks_contrib_number}")
-print(f"minimum number of ticks to get zero adoption: {min_ticks_non_contrib_number}")
-print(f"average number of ticks to get zero adoption: {average_ticks_non_contrib_number}")
-print(f"maximum number of ticks to get zero adoption: {max_ticks_non_contrib_number}")
-print("---")
+print_stats(
+    contrib_space=mean_contributors_percent,
+    ticks_space=np.mean(ticks_number, axis=2)
+)
 
 fig, ax = plt.subplots(1, 1)
 cp = ax.contourf(syn, pre, mean_contributors_percent, levels=np.linspace(0, 100, 11))

@@ -9,6 +9,8 @@ def plot_matrix_values(
         matrix: np.ndarray,
         title: str,
         cmap="viridis",
+        vmin=1,
+        vmax=4,
         xlabel="",
         ylabel="",
         xticks=None,
@@ -22,10 +24,13 @@ def plot_matrix_values(
     """
     fig, ax = plt.subplots()
     rows, cols = matrix.shape
-    ax.matshow(matrix, cmap=cmap, origin='lower')
-    for i in range(rows):
-        for j in range(cols):
-            ax.text(i, j, str(matrix[j, i]), va='center', ha='center')
+    ms = ax.matshow(matrix, cmap=plt.get_cmap(cmap, vmax - vmin + 1), origin='lower', vmin=vmin, vmax=vmax)
+    if rows < 21:
+        for i in range(rows):
+            for j in range(cols):
+                ax.text(i, j, str(matrix[j, i]), va='center', ha='center')
+    else:
+        fig.colorbar(ms, ticks=np.arange(vmin, vmax + 1))
     if xlabel:
         ax.set_xlabel(xlabel)
     if ylabel:
@@ -33,11 +38,21 @@ def plot_matrix_values(
     if title:
         plt.title(title, loc='center', wrap=True, fontsize=8)
     if xticks is not None:
-        ax.set_xticks(np.arange(0, len(xticks), 1))
-        ax.set_xticklabels(xticks)
+        if len(xticks) < 21:
+            ax.set_xticks(np.arange(0, len(xticks), 1))
+            ax.set_xticklabels(xticks)
+        else:
+            t = np.linspace(0, len(xticks) - 1, round(len(xticks) / 10), endpoint=True, dtype=int)
+            ax.set_xticks(t)
+            ax.set_xticklabels(xticks[t])
     if yticks is not None:
-        ax.set_yticks(np.arange(0, len(yticks), 1))
-        ax.set_yticklabels(yticks)
+        if len(xticks) < 21:
+            ax.set_yticks(np.arange(0, len(yticks), 1))
+            ax.set_yticklabels(yticks)
+        else:
+            t = np.linspace(0, len(yticks) - 1, round(len(yticks) / 10), endpoint=True, dtype=int)
+            ax.set_yticks(t)
+            ax.set_yticklabels(yticks[t])
     plt.show()
 
 
