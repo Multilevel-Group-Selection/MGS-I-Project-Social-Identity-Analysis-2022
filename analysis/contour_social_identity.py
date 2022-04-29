@@ -15,15 +15,15 @@ sys.path.insert(0, parent_dir)
 # include the package
 from social_identity.simulate import simulate_social_identity_model
 from lattice.torus import plot_matrix_colorbar, plot_matrix_values
-from analysis.statistics import print_stats
+from analysis.statistics import SeriesStatistics
 
 # parameters of the simulation
 length = 21  # length of the social space
 density = 0.3  # density of spots randomly occupied by agents
 initial_percent = 0.3  # initial percent of contributing agents
 use_strong_commitment = True  # if True then the model applies the strong commitment else the model applies the weak commitment
-tick_max = 200  # the maximum number of attempts at one simulation
-Ngrid = 11  # number of points in ranges for synergy and pressure
+tick_max = 20  # the maximum number of attempts at one simulation
+Ngrid = 23  # number of points in ranges for synergy and pressure
 vmax = 120000  # the maximum value at legends for frequencies
 epsilon = 10.0  # outliers level for statistics
 stop_on_adoption = False  # if False then the simulation isn't stopped on all contributors of all non-contributors
@@ -54,6 +54,8 @@ noncontrib_condition_space = np.zeros((N_points, N_points), dtype=int)
 contrib_condition_space = np.zeros((N_points, N_points), dtype=int)
 
 start_time = time.time()
+run_statistics = [SeriesStatistics(epsilon) for i in range(N_runs)]
+averaged_statistics = SeriesStatistics(epsilon)
 # loops over pressure and synergy
 for ip in range(N_points):
     for ie in tqdm(range(N_points), file=sys.stdout):
@@ -61,6 +63,7 @@ for ip in range(N_points):
         f1_total = []
         f2_total = []
         f3_total = []
+        average_percents = np.zeros(tick_max)
         for i in range(N_runs):  # loop over number of runs for the same setup
             per_cont_model1, f0, f1, f2, f3 = simulate_social_identity_model(
                 length=length,
@@ -74,6 +77,9 @@ for ip in range(N_points):
                 show_plot_every=0,
                 stop_on_adoption=stop_on_adoption
             )
+            per_cont_model1 = np.array(per_cont_model1)
+            average_percents = average_percents + per_cont_model1
+            run_statistics[i].add_series(per_cont_model1)
             contributors_percent[ip, ie, i] = per_cont_model1[-1]
             ticks_number[ip, ie, i] = len(per_cont_model1) - 1
             f0_total.append(
@@ -100,6 +106,8 @@ for ip in range(N_points):
                     1: sum(f[1] for f in f3)
                 }
             )
+        average_percents /= N_runs
+        averaged_statistics.add_series(average_percents)
         f0_space[ip, ie] = f0_total[-1][0] + f0_total[-1][1]  # use results of the last iteration
         f1_space[ip, ie] = f1_total[-1][0] + f1_total[-1][1]  # use results of the last iteration
         f2_space[ip, ie] = f2_total[-1][0] + f2_total[-1][1]  # use results of the last iteration
@@ -143,33 +151,16 @@ info = f"L = {length}, D = {density}, It = {initial_percent}, Tmax = {tick_max},
 
 print(f'Averaged for the Social Identity Model:\n{info}')
 mean_contributors_percent = np.mean(contributors_percent, axis=2)
-print(mean_contributors_percent)
+# print(mean_contributors_percent)
 print('time of simulations')
 print(time.time() - start_time)
 print("Report on each run")
 for i in range(N_runs):
     print(f"Simulation #: {i + 1}")
-    run_contrib_space = contributors_percent[:, :, i]
-    run_ticks_number = ticks_number[:, :, i]
-    print_stats(
-        contrib_space=contributors_percent[:, :, i],
-        ticks_space=ticks_number[:, :, i],
-        epsilon=epsilon
-    )
-
-print(f"Total in {N_runs} simulations")
-print_stats(
-    contrib_space=contributors_percent,
-    ticks_space=ticks_number,
-    epsilon=epsilon
-)
+    run_statistics[i].print_report()
 
 print(f"Averaged in {N_runs} simulations")
-print_stats(
-    contrib_space=mean_contributors_percent,
-    ticks_space=np.mean(ticks_number, axis=2),
-    epsilon=epsilon
-)
+averaged_statistics.print_report()
 
 fig, ax = plt.subplots(1, 1)
 cp = ax.contourf(syn, pre, mean_contributors_percent, levels=np.linspace(0, 100, 11))
@@ -188,7 +179,7 @@ ax.set_title(f'Averaged for the Social Identity Model:\n{info} - filtered')
 ax.set_xlabel('synergy')
 ax.set_ylabel('pressure')
 plt.show()
-# vmax = max(f0_space.max(), f1_space.max(), f2_space.max(), f3_space.max())
+
 plot_matrix_colorbar(
     np.array(f0_space),
     title=f"No threat to self or group: {info}",
@@ -247,16 +238,6 @@ np.savetxt(f"threat_to_group_but_not_self_{now}.csv", f2_space, delimiter=",")
 np.savetxt(f"threat_to_self_and_group_{now}.csv", f3_space, delimiter=",")
 np.savetxt(f"situation-behavior_combinations_{now}.csv", condition_space, delimiter=",")
 
-# vmax = max(
-#     f0_noncontrib_space.max(),
-#     f1_noncontrib_space.max(),
-#     f2_noncontrib_space.max(),
-#     f3_noncontrib_space.max(),
-#     f0_contrib_space.max(),
-#     f1_contrib_space.max(),
-#     f2_contrib_space.max(),
-#     f3_contrib_space.max()
-# )
 plot_matrix_colorbar(
     np.array(f0_noncontrib_space),
     title=f"Non-contributors. No threat to self or group:\n{info}",

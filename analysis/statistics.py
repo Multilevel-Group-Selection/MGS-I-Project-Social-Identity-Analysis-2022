@@ -1,6 +1,49 @@
 import numpy as np
 
 
+class SeriesStatistics:
+    def __init__(self, epsilon: float):
+        self.below_epsilon = 0
+        self.upper_epsilon = 0
+        self.non_outlier = 0
+        self.number_of_series = 0
+        self.epsilon = epsilon
+        self.below_epsilon_starting_tick = []
+        self.upper_epsilon_starting_tick = []
+        self.non_outlier_percent = []
+
+    def add_series(self, series: np.ndarray):
+        self.number_of_series += 1
+        if series[-1] < self.epsilon:
+            self.below_epsilon += 1
+            i = len(series) - 1
+            while i >= 0 and series[i] < self.epsilon:
+                i -= 1
+            self.below_epsilon_starting_tick.append(i + 1)
+        elif series[-1] > 100.0 - self.epsilon:
+            self.upper_epsilon += 1
+            i = len(series) - 1
+            while i >= 0 and series[i] > 100.0 - self.epsilon:
+                i -= 1
+            self.upper_epsilon_starting_tick.append(i + 1)
+        else:
+            self.non_outlier += 1
+            self.non_outlier_percent.append(series[-1])
+
+    def print_report(self):
+        print(f"number of synergy-pressure pairs with less than {self.epsilon}% adoption: {self.below_epsilon}")
+        print(f"number of synergy-pressure pairs with more than {100.0 - self.epsilon}% adoption: {self.upper_epsilon}")
+        print(f"number of synergy-pressure pairs with adoption in [{self.epsilon}%; {100.0 - self.epsilon}%]: {self.non_outlier}")
+        print(f"average percent of contributors excluding with adoption in [{self.epsilon}%; {100.0 - self.epsilon}%]: {np.mean(self.non_outlier_percent)}")
+        print(f"minimum number of ticks to get the equilibrium with less than {self.epsilon}% adoption: {np.min(self.below_epsilon_starting_tick) if self.below_epsilon_starting_tick else None}")
+        print(f"average number of ticks to get the equilibrium with less than {self.epsilon}% adoption: {np.mean(self.below_epsilon_starting_tick) if self.below_epsilon_starting_tick else None}")
+        print(f"maximum number of ticks to get the equilibrium with less than {self.epsilon}% adoption: {np.max(self.below_epsilon_starting_tick) if self.below_epsilon_starting_tick else None}")
+        print(f"minimum number of ticks to get the equilibrium with more than {100.0 - self.epsilon}% adoption: {np.min(self.upper_epsilon_starting_tick) if self.upper_epsilon_starting_tick else None}")
+        print(f"average number of ticks to get the equilibrium with more than {100.0 - self.epsilon}% adoption: {np.mean(self.upper_epsilon_starting_tick) if self.upper_epsilon_starting_tick else None}")
+        print(f"maximum number of ticks to get the equilibrium with more than {100.0 - self.epsilon}% adoption: {np.max(self.upper_epsilon_starting_tick) if self.upper_epsilon_starting_tick else None}")
+        print("---")
+
+
 def print_stats(contrib_space: np.ndarray, ticks_space: np.ndarray, epsilon: float = 10.0):
     contrib_idx = np.where(contrib_space > 100.0 - epsilon)
     non_contrib_idx = np.where(contrib_space < epsilon)

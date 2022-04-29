@@ -30,7 +30,7 @@ def simulate_social_identity_model(
 
     # Simulation
     contributors_number = len(field.nonempty(value=effort))
-    percent_of_contributors = [contributors_number / population]
+    percent_of_contributors = []
     tick = 0
     not_focal_agent_threat_to_self_not_threat_group_freq = []
     focal_agent_threat_to_self_not_threat_group_freq = []

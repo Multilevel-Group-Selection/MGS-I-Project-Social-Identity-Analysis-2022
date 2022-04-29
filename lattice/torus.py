@@ -1,5 +1,6 @@
 import random
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 import numpy as np
 
 from typing import Optional
@@ -28,7 +29,7 @@ def plot_matrix_values(
     if rows < 21:
         for i in range(rows):
             for j in range(cols):
-                ax.text(i, j, str(matrix[j, i]), va='center', ha='center')
+                ax.text(i, j, str(matrix[j, i]), va='center', ha='center', fontsize=6)
     else:
         fig.colorbar(ms, ticks=np.arange(vmin, vmax + 1))
     if xlabel:
@@ -39,20 +40,18 @@ def plot_matrix_values(
         plt.title(title, loc='center', wrap=True, fontsize=8)
     if xticks is not None:
         if len(xticks) < 21:
-            ax.set_xticks(np.arange(0, len(xticks), 1))
-            ax.set_xticklabels(xticks)
+            t = np.arange(0, len(xticks), 1)
         else:
             t = np.linspace(0, len(xticks) - 1, round(len(xticks) / 10), endpoint=True, dtype=int)
-            ax.set_xticks(t)
-            ax.set_xticklabels(xticks[t])
+        ax.set_xticks(t)
+        ax.set_xticklabels(map("{:.1f}".format, xticks[t]), fontsize=7)
     if yticks is not None:
         if len(xticks) < 21:
-            ax.set_yticks(np.arange(0, len(yticks), 1))
-            ax.set_yticklabels(yticks)
+            t = np.arange(0, len(yticks), 1)
         else:
             t = np.linspace(0, len(yticks) - 1, round(len(yticks) / 10), endpoint=True, dtype=int)
-            ax.set_yticks(t)
-            ax.set_yticklabels(yticks[t])
+        ax.set_yticks(t)
+        ax.set_yticklabels(map("{:.1f}".format, yticks[t]), fontsize=7)
     plt.show()
 
 
