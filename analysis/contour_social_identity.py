@@ -25,7 +25,7 @@ use_strong_commitment = True  # if True then the model applies the strong commit
 tick_max = 200  # the maximum number of attempts at one simulation
 Ngrid = 11  # number of points in ranges for synergy and pressure
 vmax = 120000  # the maximum value at legends for frequencies
-epsilon = 1.0E-6  # zero at the floating numbers comparison
+epsilon = 10.0  # outliers level for statistics
 stop_on_adoption = False  # if False then the simulation isn't stopped on all contributors of all non-contributors
 # create ranges for the simulation
 syn = np.linspace(0, 10, Ngrid)  # grid nodes for synergy
@@ -153,19 +153,22 @@ for i in range(N_runs):
     run_ticks_number = ticks_number[:, :, i]
     print_stats(
         contrib_space=contributors_percent[:, :, i],
-        ticks_space=ticks_number[:, :, i]
+        ticks_space=ticks_number[:, :, i],
+        epsilon=epsilon
     )
 
 print(f"Total in {N_runs} simulations")
 print_stats(
     contrib_space=contributors_percent,
-    ticks_space=ticks_number
+    ticks_space=ticks_number,
+    epsilon=epsilon
 )
 
 print(f"Averaged in {N_runs} simulations")
 print_stats(
     contrib_space=mean_contributors_percent,
-    ticks_space=np.mean(ticks_number, axis=2)
+    ticks_space=np.mean(ticks_number, axis=2),
+    epsilon=epsilon
 )
 
 fig, ax = plt.subplots(1, 1)
