@@ -5,6 +5,19 @@ import numpy as np
 
 from typing import Optional
 
+from matplotlib.animation import FuncAnimation
+
+
+def get_animation(frames, title: str, vmin: int, vmax: int, map_values):
+    fig, ax = plt.subplots()
+    anim = FuncAnimation(
+        fig,
+        lambda f: plot_matrix_values(frames[f], f"{title}#{f}", cmap="Purples", vmin=vmin, vmax=vmax, map_values=map_values, fig=fig, ax=ax, is_show=False),
+        repeat=False
+    )
+    # plt.show()
+    return anim
+
 
 def plot_matrix_values(
         matrix: np.ndarray,
@@ -15,7 +28,11 @@ def plot_matrix_values(
         xlabel="",
         ylabel="",
         xticks=None,
-        yticks=None
+        yticks=None,
+        map_values=None,
+        fig=None,
+        ax=None,
+        is_show=True
 ):
     """
     This function plots the matrix printing values in cells
@@ -23,13 +40,17 @@ def plot_matrix_values(
     :param title: title of the plot
     :param cmap: name of or reference to the colormap
     """
-    fig, ax = plt.subplots()
+    if fig is None or ax is None:
+        fig, ax = plt.subplots()
+    else:
+        ax.clear()
     rows, cols = matrix.shape
     ms = ax.matshow(matrix, cmap=plt.get_cmap(cmap, vmax - vmin + 1), origin='lower', vmin=vmin, vmax=vmax)
     if rows < 21:
         for i in range(rows):
             for j in range(cols):
-                ax.text(i, j, str(matrix[j, i]), va='center', ha='center', fontsize=6)
+                v = str(matrix[j, i]) if map_values is None else str(map_values[matrix[j, i]])
+                ax.text(i, j, v, va='center', ha='center', fontsize=6)
     else:
         fig.colorbar(ms, ticks=np.arange(vmin, vmax + 1))
     if xlabel:
@@ -52,7 +73,8 @@ def plot_matrix_values(
             t = np.linspace(0, len(yticks) - 1, round(len(yticks) / 10), endpoint=True, dtype=int)
         ax.set_yticks(t)
         ax.set_yticklabels(map("{:.1f}".format, yticks[t]), fontsize=7)
-    plt.show()
+    if is_show:
+        plt.show()
 
 
 def plot_matrix_colorbar(
@@ -145,7 +167,17 @@ class TorusLattice:
         :param linewidths: Width of spots borders
         """
         if print_values_in_cells:
-            plot_matrix_values(np.array(self.field), title)
+            plot_matrix_values(
+                np.array(self.field),
+                title,
+                vmin=self.field.min(),
+                vmax=self.field.max(),
+                map_values={
+                    self.empty_node_value: "",
+                    self.empty_node_value + 1: "n",
+                    self.empty_node_value + 2: "c"
+                }
+            )
         else:
             plot_matrix_colorbar(np.array(self.field), title)
 

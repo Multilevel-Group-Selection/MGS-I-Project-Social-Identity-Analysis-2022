@@ -1,6 +1,7 @@
 import inspect
 import os
 import sys
+from datetime import datetime
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -11,13 +12,13 @@ sys.path.insert(0, parent_dir)
 from social_identity.simulate import simulate_social_identity_model
 
 # Parameters of the simulation
-length = 21
+length = 20
 density = 0.3
 initial_percent = 0.3
 effort = 1
 pressure = 1
 synergy = 1
-use_strong_commitment = True  # If True then the strong commitment is applied else the weak commitment is applied
+use_strong_commitment = False  # If True then the strong commitment is applied else the weak commitment is applied
 tick_max = 200
 show_plot_every = 0  # if > 0 then the social space is plotted every show_plot_every iteration
 # Simulation
@@ -32,7 +33,9 @@ focal_agent_threat_to_self_threat_group_freq = simulate_social_identity_model(
     synergy=synergy,
     use_strong_commitment=use_strong_commitment,
     tick_max=tick_max,
-    show_plot_every=show_plot_every
+    show_plot_every=show_plot_every,
+    animation_filepath=f"model_{'strong' if use_strong_commitment else 'weak'}"
+                       f"_L{length}_D{density}_It{initial_percent}_P_{pressure}_S{synergy}_{datetime.now().date()}.gif"
 )
 
 info = f"L = {length}, D = {density}, It = {initial_percent}, P = {pressure}, S = {synergy}, " \

@@ -2,7 +2,7 @@ import random
 
 import numpy as np
 
-from lattice.torus import TorusLattice
+from lattice.torus import TorusLattice, get_animation
 
 
 def simulate_social_identity_model(
@@ -15,7 +15,8 @@ def simulate_social_identity_model(
         use_strong_commitment: bool = True,
         tick_max: int = 200,
         show_plot_every: int = 0,
-        stop_on_adoption=True
+        stop_on_adoption=True,
+        animation_filepath=""
 ):
     field = TorusLattice(length)
     population, contrib_initial = field.land_agents(
@@ -36,6 +37,8 @@ def simulate_social_identity_model(
     focal_agent_threat_to_self_not_threat_group_freq = []
     not_focal_agent_threat_to_self_threat_group_freq = []
     focal_agent_threat_to_self_threat_group_freq = []
+    frames = [np.copy(field.field)]
+    track = []
     while (0 < contributors_number < population or not stop_on_adoption) and tick < tick_max:
         agents_list = field.nonempty()
         contributor = np.zeros((length, length))
@@ -44,8 +47,11 @@ def simulate_social_identity_model(
         focal_agent_threat_to_self_not_threat_group = {0: 0, effort: 0}
         not_focal_agent_threat_to_self_threat_group = {0: 0, effort: 0}
         focal_agent_threat_to_self_threat_group = {0: 0, effort: 0}
+        is_track_moved = False
         for agent in agents_list:
             row, col = agent
+            if not track:
+                track.append((row, col))
             group = field.nonempty_in_radius(row, col, radius=1)
             agents_in_radius = len(group)
             neighbors_number = agents_in_radius - 1
@@ -58,6 +64,9 @@ def simulate_social_identity_model(
                 # If the agent’s number of neighbors is ≤ 1, follow the base model’s existing logic for movement and type change.
                 if is_focal_agent_threat_to_self:
                     new_row, new_col = field.move_from(row, col)
+                    if row == track[-1][0] and col == track[-1][1]:
+                        track.append((new_row, new_col))
+                        is_track_moved = True
                     contributor[new_row, new_col] = contributor[row, col]
                     non_contributor[new_row, new_col] = non_contributor[row, col]
                     contributor[row, col] = 0
@@ -169,6 +178,9 @@ def simulate_social_identity_model(
                                         contributor[group_agent_row, group_agent_col] += 1  # contributor -> non-contributor
                 else:
                     new_row, new_col = field.move_from(row, col)
+                    if row == track[-1][0] and col == track[-1][1]:
+                        track.append((new_row, new_col))
+                        is_track_moved = True
                     contributor[new_row, new_col] = contributor[row, col]
                     non_contributor[new_row, new_col] = non_contributor[row, col]
                     contributor[row, col] = 0
@@ -223,5 +235,30 @@ def simulate_social_identity_model(
         focal_agent_threat_to_self_threat_group_freq.append(focal_agent_threat_to_self_threat_group)
         if show_plot_every > 0 and tick % show_plot_every == 0:
             field.plot(f"The Social Space # {tick}")
+        if animation_filepath:
+            frames.append(np.copy(field.field))
+        if not is_track_moved:
+            track.append(track[-1])
         tick += 1
+
+    if animation_filepath:
+        print(f"Simulation is finished in {tick} ticks. Saving the animation at {animation_filepath}")
+        for ((r,c), frame) in zip(track, frames):
+            frame[r, c] += 4
+        animation = get_animation(
+            frames=frames,
+            title=f"The Social Space",
+            vmin=-1,
+            vmax=5,
+            map_values={
+                -1: "",
+                0: "n",
+                1: "c",
+                4: "n",
+                5: "c"
+            }
+        )
+        animation.save(animation_filepath, writer='pillow', fps=2)
+        print(f"Animation is saved at {animation_filepath}")
+
     return percent_of_contributors, not_focal_agent_threat_to_self_not_threat_group_freq, focal_agent_threat_to_self_not_threat_group_freq, not_focal_agent_threat_to_self_threat_group_freq, focal_agent_threat_to_self_threat_group_freq
