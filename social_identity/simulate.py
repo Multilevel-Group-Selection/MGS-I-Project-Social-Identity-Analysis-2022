@@ -1,5 +1,6 @@
 import random
 
+import matplotlib.pyplot as plt
 import numpy as np
 
 from lattice.torus import TorusLattice, get_animation, save_frames
@@ -276,6 +277,7 @@ def simulate_social_identity_model(
             }
         )
         animation.save(animation_filepath + ".gif", writer='pillow', fps=1)
+        print(f"Animation is saved at {animation_filepath + '.gif'}")
         save_frames(
             frames=frames,
             base_name=animation_filepath,
@@ -296,6 +298,9 @@ def simulate_social_identity_model(
                 9: "c4"
             }
         )
-        print(f"Animation is saved at {animation_filepath + '.gif'}")
+        print(f"{len(frames)} frames are saved.")
+        plt.close()
+        plt.clf()
+        plt.cla()
 
     return percent_of_contributors, not_focal_agent_threat_to_self_not_threat_group_freq, focal_agent_threat_to_self_not_threat_group_freq, not_focal_agent_threat_to_self_threat_group_freq, focal_agent_threat_to_self_threat_group_freq
