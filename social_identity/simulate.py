@@ -2,7 +2,7 @@ import random
 
 import numpy as np
 
-from lattice.torus import TorusLattice, get_animation
+from lattice.torus import TorusLattice, get_animation, save_frames
 
 
 def simulate_social_identity_model(
@@ -37,7 +37,7 @@ def simulate_social_identity_model(
     focal_agent_threat_to_self_not_threat_group_freq = []
     not_focal_agent_threat_to_self_threat_group_freq = []
     focal_agent_threat_to_self_threat_group_freq = []
-    frames = [np.copy(field.field)]
+    frames = []  # [np.copy(field.field)]
     track = []
     while (0 < contributors_number < population or not stop_on_adoption) and tick < tick_max:
         agents_list = field.nonempty()
@@ -111,6 +111,17 @@ def simulate_social_identity_model(
                     not_focal_agent_threat_to_self_threat_group[field[row, col]] += 1
                 else:
                     focal_agent_threat_to_self_threat_group[field[row, col]] += 1
+                if row == track[-1][0] and col == track[-1][1]:
+                    frame = np.copy(field.field)
+                    if not is_focal_agent_threat_to_self and not threat_to_group:
+                        frame[row, col] = 4 * frame[row, col] + 2
+                    elif is_focal_agent_threat_to_self and not threat_to_group:
+                        frame[row, col] = 4 * frame[row, col] + 3
+                    elif not is_focal_agent_threat_to_self and threat_to_group:
+                        frame[row, col] = 4 * frame[row, col] + 4
+                    else:
+                        frame[row, col] = 4 * frame[row, col] + 5
+                    frames.append(frame)
                 if use_strong_commitment:
                     # strong conditions
                     # change behavior
@@ -235,30 +246,56 @@ def simulate_social_identity_model(
         focal_agent_threat_to_self_threat_group_freq.append(focal_agent_threat_to_self_threat_group)
         if show_plot_every > 0 and tick % show_plot_every == 0:
             field.plot(f"The Social Space # {tick}")
-        if animation_filepath:
-            frames.append(np.copy(field.field))
+        # if animation_filepath:
+        #     frames.append(np.copy(field.field))
         if not is_track_moved:
             track.append(track[-1])
         tick += 1
 
     if animation_filepath:
-        print(f"Simulation is finished in {tick} ticks. Saving the animation at {animation_filepath}")
-        for ((r,c), frame) in zip(track, frames):
-            frame[r, c] += 4
+        print(f"Simulation is finished in {tick} ticks. Saving the animation of {len(frames)} frames at {animation_filepath}")
+        # for ((r,c), frame) in zip(track, frames):
+        #     frame[r, c] += 4
         animation = get_animation(
             frames=frames,
             title=f"The Social Space",
             vmin=-1,
-            vmax=5,
+            vmax=12,
             map_values={
                 -1: "",
                 0: "n",
                 1: "c",
-                4: "n",
-                5: "c"
+                2: "n1",
+                3: "n2",
+                4: "n3",
+                5: "n4",
+                6: "c1",
+                7: "c2",
+                8: "c3",
+                9: "c4"
             }
         )
-        animation.save(animation_filepath, writer='pillow', fps=2)
-        print(f"Animation is saved at {animation_filepath}")
+        animation.save(animation_filepath + ".gif", writer='pillow', fps=1)
+        save_frames(
+            frames=frames,
+            base_name=animation_filepath,
+            title=f"The Social Space",
+            vmin=-1,
+            vmax=12,
+            map_values={
+                -1: "",
+                0: "n",
+                1: "c",
+                2: "n1",
+                3: "n2",
+                4: "n3",
+                5: "n4",
+                6: "c1",
+                7: "c2",
+                8: "c3",
+                9: "c4"
+            }
+        )
+        print(f"Animation is saved at {animation_filepath + '.gif'}")
 
     return percent_of_contributors, not_focal_agent_threat_to_self_not_threat_group_freq, focal_agent_threat_to_self_not_threat_group_freq, not_focal_agent_threat_to_self_threat_group_freq, focal_agent_threat_to_self_threat_group_freq

@@ -12,11 +12,18 @@ def get_animation(frames, title: str, vmin: int, vmax: int, map_values):
     fig, ax = plt.subplots()
     anim = FuncAnimation(
         fig,
-        lambda f: plot_matrix_values(frames[f], f"{title}#{f}", cmap="Purples", vmin=vmin, vmax=vmax, map_values=map_values, fig=fig, ax=ax, is_show=False),
+        lambda f: plot_matrix_values(frames[f], f"{title}#{f}", vmin=vmin, vmax=vmax, map_values=map_values, fig=fig, ax=ax, is_show=False),
         repeat=False
     )
-    # plt.show()
     return anim
+
+
+def save_frames(frames, base_name: str, title: str, vmin: int, vmax: int, map_values):
+    fig, ax = plt.subplots()
+    for i, frame in enumerate(frames):
+        plot_matrix_values(frame, f"{title}#{i}", vmin=vmin, vmax=vmax, map_values=map_values,
+                           fig=fig, ax=ax, is_show=False)
+        plt.savefig(f"{base_name}_{i}.png")
 
 
 def plot_matrix_values(

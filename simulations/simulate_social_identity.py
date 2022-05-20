@@ -35,7 +35,7 @@ focal_agent_threat_to_self_threat_group_freq = simulate_social_identity_model(
     tick_max=tick_max,
     show_plot_every=show_plot_every,
     animation_filepath=f"model_{'strong' if use_strong_commitment else 'weak'}"
-                       f"_L{length}_D{density}_It{initial_percent}_P_{pressure}_S{synergy}_{datetime.now().date()}.gif"
+                       f"_L{length}_P_{pressure}_S{synergy}_{datetime.now().date()}"
 )
 
 info = f"L = {length}, D = {density}, It = {initial_percent}, P = {pressure}, S = {synergy}, " \
