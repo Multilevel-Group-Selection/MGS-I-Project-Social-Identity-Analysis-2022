@@ -51,7 +51,7 @@ def simulate_social_identity_model(
         is_track_moved = False
         for agent in agents_list:
             row, col = agent
-            if not track:
+            if animation_filepath and not track:
                 track.append((row, col))
             group = field.nonempty_in_radius(row, col, radius=1)
             agents_in_radius = len(group)
@@ -65,7 +65,7 @@ def simulate_social_identity_model(
                 # If the agent’s number of neighbors is ≤ 1, follow the base model’s existing logic for movement and type change.
                 if is_focal_agent_threat_to_self:
                     new_row, new_col = field.move_from(row, col)
-                    if row == track[-1][0] and col == track[-1][1]:
+                    if animation_filepath and row == track[-1][0] and col == track[-1][1]:
                         track.append((new_row, new_col))
                         is_track_moved = True
                     contributor[new_row, new_col] = contributor[row, col]
@@ -112,7 +112,7 @@ def simulate_social_identity_model(
                     not_focal_agent_threat_to_self_threat_group[field[row, col]] += 1
                 else:
                     focal_agent_threat_to_self_threat_group[field[row, col]] += 1
-                if row == track[-1][0] and col == track[-1][1]:
+                if animation_filepath and row == track[-1][0] and col == track[-1][1]:
                     frame = np.copy(field.field)
                     if not is_focal_agent_threat_to_self and not threat_to_group:
                         frame[row, col] = 4 * frame[row, col] + 2
@@ -190,7 +190,7 @@ def simulate_social_identity_model(
                                         contributor[group_agent_row, group_agent_col] += 1  # contributor -> non-contributor
                 else:
                     new_row, new_col = field.move_from(row, col)
-                    if row == track[-1][0] and col == track[-1][1]:
+                    if animation_filepath and row == track[-1][0] and col == track[-1][1]:
                         track.append((new_row, new_col))
                         is_track_moved = True
                     contributor[new_row, new_col] = contributor[row, col]
@@ -249,7 +249,7 @@ def simulate_social_identity_model(
             field.plot(f"The Social Space # {tick}")
         # if animation_filepath:
         #     frames.append(np.copy(field.field))
-        if not is_track_moved:
+        if animation_filepath and not is_track_moved:
             track.append(track[-1])
         tick += 1
 
