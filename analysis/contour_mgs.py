@@ -77,6 +77,8 @@ for ip in range(N_points):
                 use_groups=use_groups,
                 stop_on_adoption=stop_on_adoption
             )
+            if len(per_cont_model1) < tick_max:
+                per_cont_model1 = per_cont_model1 + [per_cont_model1[-1]] * (tick_max - len(per_cont_model1))
             per_cont_model1 = np.array(per_cont_model1)
             average_percents = average_percents + per_cont_model1
             run_statistics[i].add_series(per_cont_model1)

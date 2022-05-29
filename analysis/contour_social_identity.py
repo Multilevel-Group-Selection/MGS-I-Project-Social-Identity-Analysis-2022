@@ -18,15 +18,15 @@ from lattice.torus import plot_matrix_colorbar, plot_matrix_values
 from analysis.statistics import SeriesStatistics
 
 # parameters of the simulation
-length = 21  # length of the social space
+length = 20  # length of the social space
 density = 0.7  # density of spots randomly occupied by agents
 initial_percent = 0.3  # initial percent of contributing agents
-use_strong_commitment = True  # if True then the model applies the strong commitment else the model applies the weak commitment
-tick_max = 1000  # the maximum number of attempts at one simulation
+use_strong_commitment = False  # if True then the model applies the strong commitment else the model applies the weak commitment
+tick_max = 200  # the maximum number of attempts at one simulation
 Ngrid = 100  # number of points in ranges for synergy and pressure
 vmax = 120000  # the maximum value at legends for frequencies
 epsilon = 10.0  # outliers level for statistics
-stop_on_adoption = False  # if False then the simulation isn't stopped on all contributors of all non-contributors
+stop_on_adoption = True  # if False then the simulation isn't stopped on all contributors of all non-contributors
 # create ranges for the simulation
 syn = np.linspace(0, 10, Ngrid)  # grid nodes for synergy
 pre = np.linspace(0, 10, Ngrid)  # grid nodes for pressure
@@ -77,6 +77,8 @@ for ip in range(N_points):
                 show_plot_every=0,
                 stop_on_adoption=stop_on_adoption
             )
+            if len(per_cont_model1) < tick_max:
+                per_cont_model1 = per_cont_model1 + [per_cont_model1[-1]] * (tick_max - len(per_cont_model1))
             per_cont_model1 = np.array(per_cont_model1)
             average_percents = average_percents + per_cont_model1
             run_statistics[i].add_series(per_cont_model1)
@@ -106,8 +108,8 @@ for ip in range(N_points):
                     1: sum(f[1] for f in f3)
                 }
             )
-        average_percents /= N_runs
-        averaged_statistics.add_series(average_percents)
+        # average_percents /= N_runs
+        # averaged_statistics.add_series(average_percents)
         f0_space[ip, ie] = f0_total[-1][0] + f0_total[-1][1]  # use results of the last iteration
         f1_space[ip, ie] = f1_total[-1][0] + f1_total[-1][1]  # use results of the last iteration
         f2_space[ip, ie] = f2_total[-1][0] + f2_total[-1][1]  # use results of the last iteration
