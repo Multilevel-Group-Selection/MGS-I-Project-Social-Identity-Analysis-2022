@@ -21,6 +21,11 @@ synergy = 1
 use_strong_commitment = False  # If True then the strong commitment is applied else the weak commitment is applied
 tick_max = 200
 show_plot_every = 0  # if > 0 then the social space is plotted every show_plot_every iteration
+save_animation = True
+if save_animation:
+    animation_filepath = f"model_{'strong' if use_strong_commitment else 'weak'}_L{length}_P{pressure}_S{synergy}_{datetime.now().date()}"
+else:
+    animation_filepath = ""
 # Simulation
 percent_of_contributors, not_focal_agent_threat_to_self_not_threat_group_freq, \
 focal_agent_threat_to_self_not_threat_group_freq, not_focal_agent_threat_to_self_threat_group_freq, \
@@ -34,8 +39,7 @@ focal_agent_threat_to_self_threat_group_freq = simulate_social_identity_model(
     use_strong_commitment=use_strong_commitment,
     tick_max=tick_max,
     show_plot_every=show_plot_every,
-    animation_filepath=f"model_{'strong' if use_strong_commitment else 'weak'}"
-                       f"_L{length}_P_{pressure}_S{synergy}_{datetime.now().date()}"
+    animation_filepath=animation_filepath
 )
 
 info = f"L = {length}, D = {density}, It = {initial_percent}, P = {pressure}, S = {synergy}, " \
