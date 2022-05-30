@@ -19,7 +19,7 @@ def simulate_social_identity_model(
         stop_on_adoption=True,
         animation_filepath=""
 ):
-    field = TorusLattice(length)
+    field = TorusLattice(length, contrib_value=effort)
     population, contrib_initial = field.land_agents(
         density=density,
         initial_percent=initial_percent,
@@ -114,14 +114,16 @@ def simulate_social_identity_model(
                     focal_agent_threat_to_self_threat_group[field[row, col]] += 1
                 if animation_filepath and row == track[-1][0] and col == track[-1][1]:
                     frame = np.copy(field.field)
+                    # normalize the frame
+                    frame[frame == effort] = 1
                     if not is_focal_agent_threat_to_self and not threat_to_group:
-                        frame[row, col] = 4 * frame[row, col] + 2
-                    elif is_focal_agent_threat_to_self and not threat_to_group:
                         frame[row, col] = 4 * frame[row, col] + 3
-                    elif not is_focal_agent_threat_to_self and threat_to_group:
+                    elif is_focal_agent_threat_to_self and not threat_to_group:
                         frame[row, col] = 4 * frame[row, col] + 4
-                    else:
+                    elif not is_focal_agent_threat_to_self and threat_to_group:
                         frame[row, col] = 4 * frame[row, col] + 5
+                    else:
+                        frame[row, col] = 4 * frame[row, col] + 6
                     frames.append(frame)
                 if use_strong_commitment:
                     # strong conditions
@@ -255,48 +257,36 @@ def simulate_social_identity_model(
 
     if animation_filepath:
         print(f"Simulation is finished in {tick} ticks. Saving the animation of {len(frames)} frames at {animation_filepath}")
-        # for ((r,c), frame) in zip(track, frames):
-        #     frame[r, c] += 4
+        map_values = {
+            -1: "",
+            0: "n",
+            1: "c",
+            3: "n1",
+            4: "n2",
+            5: "n3",
+            6: "n4",
+            7: "c1",
+            8: "c2",
+            9: "c3",
+            10: "c4"
+        }
+        animation_title = f"Agent tracking, the Frame "
         animation = get_animation(
             frames=frames,
-            title=f"The Social Space",
+            title=animation_title,
             vmin=-1,
             vmax=12,
-            map_values={
-                -1: "",
-                0: "n",
-                1: "c",
-                2: "n1",
-                3: "n2",
-                4: "n3",
-                5: "n4",
-                6: "c1",
-                7: "c2",
-                8: "c3",
-                9: "c4"
-            }
+            map_values=map_values
         )
         animation.save(animation_filepath + ".gif", writer='pillow', fps=1)
         print(f"Animation is saved at {animation_filepath + '.gif'}")
         save_frames(
             frames=frames,
             base_name=animation_filepath,
-            title=f"The Social Space",
+            title=animation_title,
             vmin=-1,
             vmax=12,
-            map_values={
-                -1: "",
-                0: "n",
-                1: "c",
-                2: "n1",
-                3: "n2",
-                4: "n3",
-                5: "n4",
-                6: "c1",
-                7: "c2",
-                8: "c3",
-                9: "c4"
-            }
+            map_values=map_values
         )
         print(f"{len(frames)} frames are saved.")
         plt.close()

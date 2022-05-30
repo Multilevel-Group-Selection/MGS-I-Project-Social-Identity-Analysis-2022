@@ -16,10 +16,11 @@ length = 20
 density = 0.3
 initial_percent = 0.3
 effort = 1
-pressure = 1
-synergy = 1
+pressure = 6
+synergy = 8
 use_strong_commitment = False  # If True then the strong commitment is applied else the weak commitment is applied
-tick_max = 200
+tick_max = 20
+stop_on_adoption = True
 show_plot_every = 0  # if > 0 then the social space is plotted every show_plot_every iteration
 save_animation = True
 if save_animation:
@@ -39,6 +40,7 @@ focal_agent_threat_to_self_threat_group_freq = simulate_social_identity_model(
     use_strong_commitment=use_strong_commitment,
     tick_max=tick_max,
     show_plot_every=show_plot_every,
+    stop_on_adoption=stop_on_adoption,
     animation_filepath=animation_filepath
 )
 

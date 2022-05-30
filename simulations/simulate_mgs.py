@@ -20,6 +20,7 @@ pressure = 8
 synergy = 9.5
 tick_max = 200
 show_plot_every = 0  # if > 0 then the social space is plotted every show_plot_every iteration
+stop_on_adoption = True
 use_groups = True  # if True then groups are applied to estimate behavior
 
 percent_of_contributors, not_focal_agent_threat_to_self_not_threat_group_freq, \
@@ -33,7 +34,8 @@ focal_agent_threat_to_self_threat_group_freq = simulate_base_model(
     synergy=synergy,
     tick_max=tick_max,
     show_plot_every=show_plot_every,
-    use_groups=use_groups
+    use_groups=use_groups,
+    stop_on_adoption=stop_on_adoption
 )
 
 info = f"L = {length}, D = {density}, It = {initial_percent}, P = {pressure}, S = {synergy}"

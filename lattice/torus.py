@@ -13,7 +13,8 @@ def get_animation(frames, title: str, vmin: int, vmax: int, map_values):
     anim = FuncAnimation(
         fig,
         lambda f: plot_matrix_values(frames[f], f"{title}#{f}", vmin=vmin, vmax=vmax, map_values=map_values, fig=fig, ax=ax, is_show=False),
-        repeat=False
+        repeat=False,
+        save_count=len(frames)
     )
     return anim
 
@@ -143,7 +144,13 @@ class TorusLattice:
     """
     This class is an abstraction of the torus lattice to model the social space
     """
-    def __init__(self, order: int, empty_node_value: int = -1) -> None:
+    def __init__(
+            self,
+            order: int,
+            empty_node_value: int = -1,
+            non_contrib_value: int = 0,
+            contrib_value: int = 1
+    ) -> None:
         """
         Constructs the squared lattice with order x order spots and initializes each by the empty_node_value value
 
@@ -152,6 +159,8 @@ class TorusLattice:
         """
         self.order = order
         self.empty_node_value = empty_node_value
+        self.non_contrib_value = non_contrib_value
+        self.contrib_value = contrib_value
         self.field = np.full(shape=(order, order), fill_value=empty_node_value, dtype=np.integer)
 
     def __getitem__(self, key):
@@ -181,8 +190,8 @@ class TorusLattice:
                 vmax=self.field.max(),
                 map_values={
                     self.empty_node_value: "",
-                    self.empty_node_value + 1: "n",
-                    self.empty_node_value + 2: "c"
+                    self.non_contrib_value: "n",
+                    self.contrib_value: "c"
                 }
             )
         else:

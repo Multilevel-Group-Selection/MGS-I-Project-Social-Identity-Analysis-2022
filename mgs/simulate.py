@@ -100,7 +100,7 @@ def simulate_base_model(
         use_groups: bool = False,
         stop_on_adoption=True
 ):
-    field = TorusLattice(length)
+    field = TorusLattice(length, contrib_value=effort)
     population, contrib_initial = field.land_agents(
         density=density,
         initial_percent=initial_percent,
