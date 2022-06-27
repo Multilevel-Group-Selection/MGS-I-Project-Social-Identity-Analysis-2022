@@ -84,8 +84,10 @@ def potentially_changing_behavior_groups(field: TorusLattice, effort: int, syner
         row, col = agent
         if contributor[row, col] > non_contributor[row, col] and field[row, col] == 0:
             field[row, col] = effort
+            field.move_from(row, col)  # the agent moves when it changes the behaviour
         elif contributor[row, col] < non_contributor[row, col] and field[row, col] == effort:
             field[row, col] = 0
+            field.move_from(row, col)  # the agent moves when it changes the behaviour
 
 
 def simulate_base_model(
@@ -154,11 +156,11 @@ def simulate_base_model(
                 not_focal_agent_threat_to_self_threat_group[field[row, col]] += 1
             else:
                 focal_agent_threat_to_self_threat_group[field[row, col]] += 1
-
-        potentially_moving(field, effort, synergy, pressure)
+        # change behaviour and move
         if use_groups:
             potentially_changing_behavior_groups(field, effort, synergy, pressure)
         else:
+            potentially_moving(field, effort, synergy, pressure)
             potentially_changing_behavior(field, effort, synergy, pressure)
         effort_agents_number = len(field.nonempty(value=effort))
         percent_of_contributors.append(100 * effort_agents_number / population)
