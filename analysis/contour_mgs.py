@@ -18,11 +18,11 @@ from lattice.torus import plot_matrix_colorbar, plot_matrix_values
 from analysis.statistics import SeriesStatistics
 
 # parameters of the simulation
-length = 10  # length of the social space
-density = 0.7  # density of spots randomly occupied by agents
+length = 20  # length of the social space
+density = 0.3  # density of spots randomly occupied by agents
 initial_percent = 0.3  # initial percent of contributing agents
-tick_max = 40  # the maximum number of attempts at one simulation
-Ngrid = 21  # number of points in ranges for synergy and pressure
+tick_max = 100  # the maximum number of attempts at one simulation
+Ngrid = 100  # number of points in ranges for synergy and pressure
 vmax = 120000  # the maximum value at legends for frequencies
 use_groups = True  # if True then the simulation uses the frequency of behaviour changes in groups
 epsilon = 10.0  # outliers level for statistics
@@ -149,6 +149,8 @@ for ip in range(N_points):
     print(f"Completed {ip + 1} form {N_points}")
 
 info = f"L = {length}, D = {density}, It = {initial_percent}, Tmax = {tick_max}"
+now = datetime.now().date()
+filename_suffix = f"{now}_{length}_{density}_{initial_percent}_{tick_max}_{Ngrid}_{stop_on_adoption}"
 
 print(f'MGS Model:\n{info}')
 mean_contributors_percent = np.mean(contributors_percent, axis=2)
@@ -170,8 +172,8 @@ ax.set_title(f'MGS Model:\n{info}')
 ax.set_xlabel('synergy')
 ax.set_ylabel('pressure')
 plt.show()
-now = datetime.now().date()
-np.savetxt(f"mgs_averaged_contributors_percent_{now}.csv", mean_contributors_percent, delimiter=",")
+
+np.savetxt(f"mgs_averaged_contributors_percent_{filename_suffix}.csv", mean_contributors_percent, delimiter=",")
 
 fig, ax = plt.subplots(1, 1)
 cp = ax.contourf(syn, pre, gaussian_filter(mean_contributors_percent, 0.5), levels=np.linspace(0, 100, 11))
@@ -233,11 +235,11 @@ plot_matrix_values(
     xticks=syn,
     yticks=pre
 )
-np.savetxt(f"mgs_no_threat_to_self_or_group_{now}.csv", f0_space, delimiter=",")
-np.savetxt(f"mgs_threat_to_self_but_not_group_{now}.csv", f1_space, delimiter=",")
-np.savetxt(f"mgs_threat_to_group_but_not_self_{now}.csv", f2_space, delimiter=",")
-np.savetxt(f"mgs_threat_to_self_and_group_{now}.csv", f3_space, delimiter=",")
-np.savetxt(f"mgs_situation-behavior_combinations_{now}.csv", condition_space, delimiter=",")
+np.savetxt(f"mgs_no_threat_to_self_or_group_{filename_suffix}.csv", f0_space, delimiter=",")
+np.savetxt(f"mgs_threat_to_self_but_not_group_{filename_suffix}.csv", f1_space, delimiter=",")
+np.savetxt(f"mgs_threat_to_group_but_not_self_{filename_suffix}.csv", f2_space, delimiter=",")
+np.savetxt(f"mgs_threat_to_self_and_group_{filename_suffix}.csv", f3_space, delimiter=",")
+np.savetxt(f"mgs_situation-behavior_combinations_{filename_suffix}.csv", condition_space, delimiter=",")
 
 plot_matrix_colorbar(
     np.array(f0_noncontrib_space),
@@ -291,11 +293,11 @@ plot_matrix_values(
     xticks=syn,
     yticks=pre
 )
-np.savetxt(f"mgs_non-contributors_no_threat_to_self_or_group_{now}.csv", f0_noncontrib_space, delimiter=",")
-np.savetxt(f"mgs_non-contributors_threat_to_self_but_not_group_{now}.csv", f1_noncontrib_space, delimiter=",")
-np.savetxt(f"mgs_non-contributors_threat_to_group_but_not_self_{now}.csv", f2_noncontrib_space, delimiter=",")
-np.savetxt(f"mgs_non-contributors_threat_to_self_and_group_{now}.csv", f3_noncontrib_space, delimiter=",")
-np.savetxt(f"mgs_non-contributors_situation-behavior_combinations_{now}.csv", noncontrib_condition_space, delimiter=",")
+np.savetxt(f"mgs_non-contributors_no_threat_to_self_or_group_{filename_suffix}.csv", f0_noncontrib_space, delimiter=",")
+np.savetxt(f"mgs_non-contributors_threat_to_self_but_not_group_{filename_suffix}.csv", f1_noncontrib_space, delimiter=",")
+np.savetxt(f"mgs_non-contributors_threat_to_group_but_not_self_{filename_suffix}.csv", f2_noncontrib_space, delimiter=",")
+np.savetxt(f"mgs_non-contributors_threat_to_self_and_group_{filename_suffix}.csv", f3_noncontrib_space, delimiter=",")
+np.savetxt(f"mgs_non-contributors_situation-behavior_combinations_{filename_suffix}.csv", noncontrib_condition_space, delimiter=",")
 
 plot_matrix_colorbar(
     np.array(f0_contrib_space),
@@ -349,8 +351,8 @@ plot_matrix_values(
     xticks=syn,
     yticks=pre
 )
-np.savetxt(f"mgs_contributors_no_threat_to_self_or_group_{now}.csv", f0_contrib_space, delimiter=",")
-np.savetxt(f"mgs_contributors_threat_to_self_but_not_group_{now}.csv", f1_contrib_space, delimiter=",")
-np.savetxt(f"mgs_contributors_threat_to_group_but_not_self_{now}.csv", f2_contrib_space, delimiter=",")
-np.savetxt(f"mgs_contributors_threat_to_self_and_group_{now}.csv", f3_contrib_space, delimiter=",")
-np.savetxt(f"mgs_contributors_situation-behavior_combinations_{now}.csv", contrib_condition_space, delimiter=",")
+np.savetxt(f"mgs_contributors_no_threat_to_self_or_group_{filename_suffix}.csv", f0_contrib_space, delimiter=",")
+np.savetxt(f"mgs_contributors_threat_to_self_but_not_group_{filename_suffix}.csv", f1_contrib_space, delimiter=",")
+np.savetxt(f"mgs_contributors_threat_to_group_but_not_self_{filename_suffix}.csv", f2_contrib_space, delimiter=",")
+np.savetxt(f"mgs_contributors_threat_to_self_and_group_{filename_suffix}.csv", f3_contrib_space, delimiter=",")
+np.savetxt(f"mgs_contributors_situation-behavior_combinations_{filename_suffix}.csv", contrib_condition_space, delimiter=",")
