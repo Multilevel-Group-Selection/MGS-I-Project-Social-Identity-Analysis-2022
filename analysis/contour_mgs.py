@@ -18,13 +18,13 @@ from lattice.torus import plot_matrix_colorbar, plot_matrix_values
 from analysis.statistics import SeriesStatistics
 
 # parameters of the simulation
-length = 20  # length of the social space
+length = 10  # length of the social space
 density = 0.3  # density of spots randomly occupied by agents
-initial_percent = 0.3  # initial percent of contributing agents
-tick_max = 100  # the maximum number of attempts at one simulation
+initial_percent = 0.7  # initial percent of contributing agents
+tick_max = 1000  # the maximum number of attempts at one simulation
 Ngrid = 100  # number of points in ranges for synergy and pressure
 vmax = 120000  # the maximum value at legends for frequencies
-use_groups = True  # if True then the simulation uses the frequency of behaviour changes in groups
+use_groups = True  # if True then the simulation uses the frequency of behavior changes in groups
 epsilon = 10.0  # outliers level for statistics
 stop_on_adoption = True  # if False then the simulation isn't stopped on all contributors of all non-contributors
 # create ranges for the simulation
