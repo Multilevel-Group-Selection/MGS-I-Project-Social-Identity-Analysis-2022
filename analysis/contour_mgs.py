@@ -18,11 +18,11 @@ from lattice.torus import plot_matrix_colorbar, plot_matrix_values
 from analysis.statistics import SeriesStatistics
 
 # parameters of the simulation
-length = 10  # length of the social space
-density = 0.3  # density of spots randomly occupied by agents
-initial_percent = 0.7  # initial percent of contributing agents
+length = 15  # length of the social space
+density = 0.7  # density of spots randomly occupied by agents
+initial_percent = 0.3  # initial percent of contributing agents
 tick_max = 1000  # the maximum number of attempts at one simulation
-Ngrid = 100  # number of points in ranges for synergy and pressure
+Ngrid = 101  # number of points in ranges for synergy and pressure
 vmax = 120000  # the maximum value at legends for frequencies
 use_groups = True  # if True then the simulation uses the frequency of behavior changes in groups
 epsilon = 10.0  # outliers level for statistics
@@ -158,12 +158,17 @@ mean_contributors_percent = np.mean(contributors_percent, axis=2)
 print('time of simulations')
 print(time.time() - start_time)
 print("Report on each run")
-for i in range(N_runs):
-    print(f"Simulation #: {i + 1}")
-    run_statistics[i].print_report()
+with open(f'report_{filename_suffix}.txt', 'w') as f:
+    for i in range(N_runs):
+        print(f"Simulation #: {i + 1}")
+        run_statistics[i].print_report()
+        print(f"Simulation #: {i + 1}", file=f)
+        run_statistics[i].print_report(f)
 
-print(f"Averaged in {N_runs} simulations")
-averaged_statistics.print_report()
+    print(f"Averaged in {N_runs} simulations")
+    averaged_statistics.print_report()
+    print(f"Averaged in {N_runs} simulations", file=f)
+    averaged_statistics.print_report(f)
 
 fig, ax = plt.subplots(1, 1)
 cp = ax.contourf(syn, pre, mean_contributors_percent, levels=np.linspace(0, 100, 11))

@@ -1,3 +1,5 @@
+import sys
+
 import numpy as np
 
 
@@ -30,20 +32,20 @@ class SeriesStatistics:
             self.non_outlier += 1
             self.non_outlier_percent.append(series[-1])
 
-    def print_report(self):
-        print(f"number of synergy-pressure pairs with less than {self.epsilon}% adoption: {self.below_epsilon}")
-        print(f"number of synergy-pressure pairs with more than {100.0 - self.epsilon}% adoption: {self.upper_epsilon}")
-        print(f"number of synergy-pressure pairs with adoption in [{self.epsilon}%; {100.0 - self.epsilon}%]: {self.non_outlier}")
-        print(f"average percent of contributors excluding with adoption in [{self.epsilon}%; {100.0 - self.epsilon}%]: {np.mean(self.non_outlier_percent)}")
-        print(f"the standard deviation for the percent of contributors excluding with adoption in [{self.epsilon}%; {100.0 - self.epsilon}%]: {np.std(self.non_outlier_percent)}")
-        print(f"minimum number of ticks to get the equilibrium with less than {self.epsilon}% adoption: {np.min(self.below_epsilon_starting_tick) if self.below_epsilon_starting_tick else None}")
-        print(f"average number of ticks to get the equilibrium with less than {self.epsilon}% adoption: {np.mean(self.below_epsilon_starting_tick) if self.below_epsilon_starting_tick else None}")
-        print(f"the standard deviation for the number of ticks to get the equilibrium with less than {self.epsilon}% adoption: {np.std(self.below_epsilon_starting_tick) if self.below_epsilon_starting_tick else None}")
-        print(f"maximum number of ticks to get the equilibrium with less than {self.epsilon}% adoption: {np.max(self.below_epsilon_starting_tick) if self.below_epsilon_starting_tick else None}")
-        print(f"minimum number of ticks to get the equilibrium with more than {100.0 - self.epsilon}% adoption: {np.min(self.upper_epsilon_starting_tick) if self.upper_epsilon_starting_tick else None}")
-        print(f"average number of ticks to get the equilibrium with more than {100.0 - self.epsilon}% adoption: {np.mean(self.upper_epsilon_starting_tick) if self.upper_epsilon_starting_tick else None}")
-        print(f"the standard deviation for the number of ticks to get the equilibrium with more than {100.0 - self.epsilon}% adoption: {np.std(self.upper_epsilon_starting_tick) if self.upper_epsilon_starting_tick else None}")
-        print(f"maximum number of ticks to get the equilibrium with more than {100.0 - self.epsilon}% adoption: {np.max(self.upper_epsilon_starting_tick) if self.upper_epsilon_starting_tick else None}")
+    def print_report(self, file=sys.stdout):
+        print(f"number of synergy-pressure pairs with less than {self.epsilon}% adoption: {self.below_epsilon}", file=file)
+        print(f"number of synergy-pressure pairs with more than {100.0 - self.epsilon}% adoption: {self.upper_epsilon}", file=file)
+        print(f"number of synergy-pressure pairs with adoption in [{self.epsilon}%; {100.0 - self.epsilon}%]: {self.non_outlier}", file=file)
+        print(f"average percent of contributors excluding with adoption in [{self.epsilon}%; {100.0 - self.epsilon}%]: {np.mean(self.non_outlier_percent)}", file=file)
+        print(f"the standard deviation for the percent of contributors excluding with adoption in [{self.epsilon}%; {100.0 - self.epsilon}%]: {np.std(self.non_outlier_percent)}", file=file)
+        print(f"minimum number of ticks to get the equilibrium with less than {self.epsilon}% adoption: {np.min(self.below_epsilon_starting_tick) if self.below_epsilon_starting_tick else None}", file=file)
+        print(f"average number of ticks to get the equilibrium with less than {self.epsilon}% adoption: {np.mean(self.below_epsilon_starting_tick) if self.below_epsilon_starting_tick else None}", file=file)
+        print(f"the standard deviation for the number of ticks to get the equilibrium with less than {self.epsilon}% adoption: {np.std(self.below_epsilon_starting_tick) if self.below_epsilon_starting_tick else None}", file=file)
+        print(f"maximum number of ticks to get the equilibrium with less than {self.epsilon}% adoption: {np.max(self.below_epsilon_starting_tick) if self.below_epsilon_starting_tick else None}", file=file)
+        print(f"minimum number of ticks to get the equilibrium with more than {100.0 - self.epsilon}% adoption: {np.min(self.upper_epsilon_starting_tick) if self.upper_epsilon_starting_tick else None}", file=file)
+        print(f"average number of ticks to get the equilibrium with more than {100.0 - self.epsilon}% adoption: {np.mean(self.upper_epsilon_starting_tick) if self.upper_epsilon_starting_tick else None}", file=file)
+        print(f"the standard deviation for the number of ticks to get the equilibrium with more than {100.0 - self.epsilon}% adoption: {np.std(self.upper_epsilon_starting_tick) if self.upper_epsilon_starting_tick else None}", file=file)
+        print(f"maximum number of ticks to get the equilibrium with more than {100.0 - self.epsilon}% adoption: {np.max(self.upper_epsilon_starting_tick) if self.upper_epsilon_starting_tick else None}", file=file)
         print("---")
 
 

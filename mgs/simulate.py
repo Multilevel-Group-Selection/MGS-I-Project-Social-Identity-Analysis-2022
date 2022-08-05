@@ -1,4 +1,5 @@
 import random
+from typing import List, Tuple
 
 import numpy as np
 
@@ -44,14 +45,16 @@ def potentially_changing_behavior(field: TorusLattice, effort: int, synergy: flo
                     field[row, col] = effort
 
 
-def potentially_changing_behavior_groups(field: TorusLattice, effort: int, synergy: float, pressure: float):
-    agents_list = field.nonempty()
+def get_group_frequency(agents_list: List[Tuple[int, int]], field: TorusLattice, effort: int, synergy: float, pressure: float):
     length = field.order
     contributor = np.zeros((length, length))
     non_contributor = np.zeros((length, length))
     for agent in agents_list:
         row, col = agent
-        if field.nonempty_number_in_radius(row, col, radius=1) == 1:
+        group = field.nonempty_in_radius(row, col, radius=1)
+        agents_in_radius = len(group)
+        neighbors_number = agents_in_radius - 1
+        if neighbors_number <= 1:
             if effort <= pressure:
                 if field[row, col] == effort:
                     non_contributor[row, col] += 1
@@ -63,11 +66,10 @@ def potentially_changing_behavior_groups(field: TorusLattice, effort: int, syner
                 else:
                     non_contributor[row, col] += 1
         else:
-            group = field.nonempty_in_radius(row, col, radius=1)
             for group_agent in group:
                 group_agent_row, group_agent_col = group_agent
-                aggents_with_effort = len([1 for (r, c) in group if field[r, c] == field[group_agent_row, group_agent_col]])
-                benefit = synergy * effort * aggents_with_effort / len(group)
+                agents_with_effort = len([1 for (r, c) in group if field[r, c] == effort])
+                benefit = synergy * effort * agents_with_effort / agents_in_radius
                 if field[group_agent_row, group_agent_col] == effort:
                     # Vulnerable contributors that are in a group reconsider
                     if benefit <= pressure:
@@ -80,14 +82,29 @@ def potentially_changing_behavior_groups(field: TorusLattice, effort: int, syner
                         contributor[group_agent_row, group_agent_col] += 1
                     else:
                         non_contributor[group_agent_row, group_agent_col] += 1
+    return contributor, non_contributor
+
+
+def potentially_moving_groups(field: TorusLattice, effort: int, synergy: float, pressure: float):
+    agents_list = field.nonempty()
+    contributor, non_contributor = get_group_frequency(agents_list, field, effort, synergy, pressure)
+    for agent in agents_list:
+        row, col = agent
+        if contributor[row, col] > non_contributor[row, col] and field[row, col] == 0:
+            field.move_from(row, col)  # the agent moves when it changes the behaviour
+        elif contributor[row, col] < non_contributor[row, col] and field[row, col] == effort:
+            field.move_from(row, col)  # the agent moves when it changes the behaviour
+
+
+def potentially_changing_behavior_groups(field: TorusLattice, effort: int, synergy: float, pressure: float):
+    agents_list = field.nonempty()
+    contributor, non_contributor = get_group_frequency(agents_list, field, effort, synergy, pressure)
     for agent in agents_list:
         row, col = agent
         if contributor[row, col] > non_contributor[row, col] and field[row, col] == 0:
             field[row, col] = effort
-            field.move_from(row, col)  # the agent moves when it changes the behaviour
         elif contributor[row, col] < non_contributor[row, col] and field[row, col] == effort:
             field[row, col] = 0
-            field.move_from(row, col)  # the agent moves when it changes the behaviour
 
 
 def simulate_base_model(
@@ -158,6 +175,7 @@ def simulate_base_model(
                 focal_agent_threat_to_self_threat_group[field[row, col]] += 1
         # change behaviour and move
         if use_groups:
+            potentially_moving_groups(field, effort, synergy, pressure)
             potentially_changing_behavior_groups(field, effort, synergy, pressure)
         else:
             potentially_moving(field, effort, synergy, pressure)
