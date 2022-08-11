@@ -24,7 +24,7 @@ initial_percent = 0.3  # initial percent of contributing agents
 tick_max = 1000  # the maximum number of attempts at one simulation
 Ngrid = 101  # number of points in ranges for synergy and pressure
 vmax = 120000  # the maximum value at legends for frequencies
-use_groups = True  # if True then the simulation uses the frequency of behavior changes in groups
+use_groups = False  # if True then the simulation uses the frequency of behavior changes in groups
 epsilon = 10.0  # outliers level for statistics
 stop_on_adoption = True  # if False then the simulation isn't stopped on all contributors of all non-contributors
 # create ranges for the simulation
