@@ -24,7 +24,7 @@ initial_percent = 0.3  # initial percent of contributing agents
 tick_max = 1000  # the maximum number of attempts at one simulation
 Ngrid = 101  # number of points in ranges for synergy and pressure
 vmax = 120000  # the maximum value at legends for frequencies
-use_groups = False  # if True then the simulation uses the frequency of behavior changes in groups
+use_groups = True  # if True then the simulation uses the frequency of behavior changes in groups
 epsilon = 10.0  # outliers level for statistics
 stop_on_adoption = True  # if False then the simulation isn't stopped on all contributors of all non-contributors
 # create ranges for the simulation
@@ -34,6 +34,9 @@ pre = np.linspace(0, 10, Ngrid)  # grid nodes for pressure
 N_points = len(syn)  # Number of points of synergy and pressure
 
 N_runs = 3  # Number of runs of the same setup for averaging
+
+info = f"L = {length}, D = {density}, It = {initial_percent}, Tmax = {tick_max}"
+print(f'MGS Model:\n{info}')
 
 contributors_percent = np.zeros((N_points, N_points, N_runs))
 ticks_number = np.zeros((N_points, N_points, N_runs), dtype=int)
@@ -148,11 +151,9 @@ for ip in range(N_points):
         )
     print(f"Completed {ip + 1} form {N_points}")
 
-info = f"L = {length}, D = {density}, It = {initial_percent}, Tmax = {tick_max}"
 now = datetime.now().date()
 filename_suffix = f"{now}_{length}_{density}_{initial_percent}_{tick_max}_{Ngrid}_{stop_on_adoption}"
 
-print(f'MGS Model:\n{info}')
 mean_contributors_percent = np.mean(contributors_percent, axis=2)
 # print(mean_contributors_percent)
 print('time of simulations')
