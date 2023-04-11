@@ -42,4 +42,5 @@ if __name__ == "__main__":
     fig.subplots_adjust(left=0.08, right=0.92)
     cbar_ax = fig.add_axes([0.93, 0.15, 0.015, 0.7])
     fig.colorbar(cp, cax=cbar_ax)
+    plt.savefig('plot4.png', dpi=300)
     plt.show()

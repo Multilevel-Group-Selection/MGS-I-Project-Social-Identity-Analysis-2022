@@ -33,7 +33,7 @@ if __name__ == "__main__":
         si_weak_07_filename,
         delimiter=","
     )
-    fig, axs = plt.subplots(2, 3, sharex="all", sharey="all")
+    fig, axs = plt.subplots(2, 3, sharex="all", sharey="all", figsize=(12, 6))
     Ngrid = 101
     syn = np.linspace(0, 10, Ngrid)  # grid nodes for synergy
     pre = np.linspace(0, 10, Ngrid)  # grid nodes for pressure
@@ -56,4 +56,5 @@ if __name__ == "__main__":
     fig.subplots_adjust(left=0.08, right=0.92)
     cbar_ax = fig.add_axes([0.93, 0.15, 0.015, 0.7])
     fig.colorbar(cp, cax=cbar_ax)
+    plt.savefig('plot6.png', dpi=300)
     plt.show()
