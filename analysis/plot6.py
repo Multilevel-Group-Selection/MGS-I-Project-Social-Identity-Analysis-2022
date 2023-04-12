@@ -51,10 +51,10 @@ if __name__ == "__main__":
     axs[1, 2].set_title("SI High, d = 0.7")
 
     fig.text(0.5, 0.04, 'synergy', ha='center')
-    fig.text(0.01, 0.5, 'pressure', va='center', rotation='vertical')
+    fig.text(0.006666666667, 0.5, 'pressure', va='center', rotation='vertical')
 
-    fig.subplots_adjust(left=0.08, right=0.92)
-    cbar_ax = fig.add_axes([0.93, 0.15, 0.015, 0.7])
+    fig.subplots_adjust(left=0.0533333333, right=0.865+0.0533333333333)
+    cbar_ax = fig.add_axes([0.9533333333333, 0.15, 0.01, 0.7])
     fig.colorbar(cp, cax=cbar_ax)
     plt.savefig('plot6.png', dpi=300)
     plt.show()

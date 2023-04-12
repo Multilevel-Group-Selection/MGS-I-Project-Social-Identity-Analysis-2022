@@ -23,14 +23,14 @@ if __name__ == "__main__":
         new_base07_filename,
         delimiter=","
     )
-    fig, axs = plt.subplots(2, 2, sharex="all", sharey="all")
+    fig, axs = plt.subplots(2, 2, sharex="all", sharey="all", figsize=(8, 6))
     Ngrid = 101
     syn = np.linspace(0, 10, Ngrid)  # grid nodes for synergy
     pre = np.linspace(0, 10, Ngrid)  # grid nodes for pressure
     cp = axs[0, 0].contourf(syn, pre, base03, levels=np.linspace(0, 100, 11))
-    axs[0, 0].set_title("Base, d = 0.3")
+    axs[0, 0].set_title("Initial Base, d = 0.3")
     cp = axs[1, 0].contourf(syn, pre, base07, levels=np.linspace(0, 100, 11))
-    axs[1, 0].set_title("Base, d = 0.7")
+    axs[1, 0].set_title("Initial Base, d = 0.7")
     cp = axs[0, 1].contourf(syn, pre, new_base03, levels=np.linspace(0, 100, 11))
     axs[0, 1].set_title("New Base, d = 0.3")
     cp = axs[1, 1].contourf(syn, pre, new_base07, levels=np.linspace(0, 100, 11))
