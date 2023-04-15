@@ -1,0 +1,56 @@
+Simulation #: 1
+number of synergy-pressure pairs with less than 10.0% adoption: 480
+number of synergy-pressure pairs with more than 90.0% adoption: 1
+number of synergy-pressure pairs with adoption in [10.0%; 90.0%]: 9720
+average percent of contributors excluding with adoption in [10.0%; 90.0%]: 40.83046830233891
+the standard deviation for the percent of contributors excluding with adoption in [10.0%; 90.0%]: 16.18077160038401
+minimum number of ticks to get the equilibrium with less than 10.0% adoption: 0
+average number of ticks to get the equilibrium with less than 10.0% adoption: 70.20416666666667
+the standard deviation for the number of ticks to get the equilibrium with less than 10.0% adoption: 157.41164182689567
+maximum number of ticks to get the equilibrium with less than 10.0% adoption: 999
+minimum number of ticks to get the equilibrium with more than 90.0% adoption: 1
+average number of ticks to get the equilibrium with more than 90.0% adoption: 1.0
+the standard deviation for the number of ticks to get the equilibrium with more than 90.0% adoption: 0.0
+maximum number of ticks to get the equilibrium with more than 90.0% adoption: 1
+Simulation #: 2
+number of synergy-pressure pairs with less than 10.0% adoption: 474
+number of synergy-pressure pairs with more than 90.0% adoption: 1
+number of synergy-pressure pairs with adoption in [10.0%; 90.0%]: 9726
+average percent of contributors excluding with adoption in [10.0%; 90.0%]: 40.877316965877704
+the standard deviation for the percent of contributors excluding with adoption in [10.0%; 90.0%]: 16.25448979981711
+minimum number of ticks to get the equilibrium with less than 10.0% adoption: 0
+average number of ticks to get the equilibrium with less than 10.0% adoption: 63.79957805907173
+the standard deviation for the number of ticks to get the equilibrium with less than 10.0% adoption: 142.305889407851
+maximum number of ticks to get the equilibrium with less than 10.0% adoption: 999
+minimum number of ticks to get the equilibrium with more than 90.0% adoption: 1
+average number of ticks to get the equilibrium with more than 90.0% adoption: 1.0
+the standard deviation for the number of ticks to get the equilibrium with more than 90.0% adoption: 0.0
+maximum number of ticks to get the equilibrium with more than 90.0% adoption: 1
+Simulation #: 3
+number of synergy-pressure pairs with less than 10.0% adoption: 480
+number of synergy-pressure pairs with more than 90.0% adoption: 2
+number of synergy-pressure pairs with adoption in [10.0%; 90.0%]: 9719
+average percent of contributors excluding with adoption in [10.0%; 90.0%]: 40.90447915540616
+the standard deviation for the percent of contributors excluding with adoption in [10.0%; 90.0%]: 16.276876319252164
+minimum number of ticks to get the equilibrium with less than 10.0% adoption: 0
+average number of ticks to get the equilibrium with less than 10.0% adoption: 65.82291666666667
+the standard deviation for the number of ticks to get the equilibrium with less than 10.0% adoption: 147.52070439374396
+maximum number of ticks to get the equilibrium with less than 10.0% adoption: 999
+minimum number of ticks to get the equilibrium with more than 90.0% adoption: 1
+average number of ticks to get the equilibrium with more than 90.0% adoption: 1.0
+the standard deviation for the number of ticks to get the equilibrium with more than 90.0% adoption: 0.0
+maximum number of ticks to get the equilibrium with more than 90.0% adoption: 1
+Averaged in 3 simulations
+number of synergy-pressure pairs with less than 10.0% adoption: 478
+number of synergy-pressure pairs with more than 90.0% adoption: 0
+number of synergy-pressure pairs with adoption in [10.0%; 90.0%]: 9723
+average percent of contributors excluding with adoption in [10.0%; 90.0%]: 40.87456728597336
+the standard deviation for the percent of contributors excluding with adoption in [10.0%; 90.0%]: 16.065529039951414
+minimum number of ticks to get the equilibrium with less than 10.0% adoption: 0
+average number of ticks to get the equilibrium with less than 10.0% adoption: 75.13389121338912
+the standard deviation for the number of ticks to get the equilibrium with less than 10.0% adoption: 165.8410252967261
+maximum number of ticks to get the equilibrium with less than 10.0% adoption: 999
+minimum number of ticks to get the equilibrium with more than 90.0% adoption: None
+average number of ticks to get the equilibrium with more than 90.0% adoption: None
+the standard deviation for the number of ticks to get the equilibrium with more than 90.0% adoption: None
+maximum number of ticks to get the equilibrium with more than 90.0% adoption: None
